@@ -19,6 +19,9 @@
         "mysql": "*"
     },
     "devDependencies": {
-        "eslint": "^8.54.0"
+        "eslint": "^8.54.0",
+        "nodemon": "^2.0.22",
+        "mockingoose": "^2.16.2",
+        "supertest": "^6.3.4"
     }
 }
