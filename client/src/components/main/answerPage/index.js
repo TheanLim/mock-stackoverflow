@@ -11,7 +11,7 @@ const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer }) => {
     const [question, setQuestion] = useState({});
     useEffect(() => {
         const fetchData = async () => {
-            let res = await getQuestionById(qid);
+            let res = await AnswerPage.getQuestionById(qid);
             setQuestion(res || {});
         };
         fetchData().catch((e) => console.log(e));
@@ -54,4 +54,5 @@ const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer }) => {
     );
 };
 
+AnswerPage.getQuestionById = getQuestionById;
 export default AnswerPage;

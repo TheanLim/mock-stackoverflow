@@ -7,7 +7,7 @@ const TagPage = ({ clickTag, handleNewQuestion }) => {
     const [tlist, setTlist] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
-            let res = await getTagsWithQuestionNumber();
+            let res = await TagPage.getTagsWithQuestionNumber();
             setTlist(res || []);
         };
 
@@ -36,4 +36,5 @@ const TagPage = ({ clickTag, handleNewQuestion }) => {
     );
 };
 
+TagPage.getTagsWithQuestionNumber = getTagsWithQuestionNumber;
 export default TagPage;

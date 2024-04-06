@@ -34,12 +34,13 @@ const NewQuestion = ({ handleQuestions }) => {
         }
 
         // Hyperlink validation
-        if (!validateHyperlink(text)) {
+        if (!NewQuestion.validateHyperlink(text)) {
             setTextErr("Invalid hyperlink format.");
             isValid = false;
         }
 
-        let tags = tag.split(" ").filter((tag) => tag.trim() !== "");
+        // let tags = tag.split(" ").filter((tag) => tag.trim() !== "");
+        let tags = Array.from(new Set(tag.split(" ").filter(tag => tag.trim() !== "")));
         if (tags.length === 0) {
             setTagErr("Should have at least 1 tag");
             isValid = false;
@@ -73,7 +74,7 @@ const NewQuestion = ({ handleQuestions }) => {
             ask_date_time: new Date(),
         };
 
-        const res = await addQuestion(question);
+        const res = await NewQuestion.addQuestion(question);
         if (res && res._id) {
             handleQuestions();
         }
@@ -129,4 +130,6 @@ const NewQuestion = ({ handleQuestions }) => {
     );
 };
 
+NewQuestion.addQuestion = addQuestion;
+NewQuestion.validateHyperlink = validateHyperlink;
 export default NewQuestion;
