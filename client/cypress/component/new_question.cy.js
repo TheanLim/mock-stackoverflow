@@ -74,6 +74,8 @@ it('addQuestion is called when click Post Question', () => {
         tags: ['tag1', 'tag2'],
         asked_by: 'usr',
         ask_date_time: new Date(),
+        status: 'open',
+        score: 0,
     };
 
     cy.stub(NewQuestion, 'validateHyperlink').returns(true);
@@ -98,6 +100,8 @@ it('handleQuestion is called when click Post Question', () => {
         tags: ['tag1', 'tag2'],
         asked_by: 'usr',
         ask_date_time: new Date(),
+        status: 'open',
+        score: 0,
     };
 
     cy.stub(NewQuestion, 'validateHyperlink').returns(true);

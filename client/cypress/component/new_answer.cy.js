@@ -42,6 +42,7 @@ it('addAnswer is called when click Post Answer', () => {
         text: 'abc',
         ans_by: 'usr',
         ans_date_time: new Date(),
+        score: 0,
     };
     
     cy.stub(NewAnswer, 'validateHyperlink').returns(true);
@@ -63,6 +64,7 @@ it('handleAnswer is called when click Post Answer', () => {
         text: 'abc',
         ans_by: 'usr',
         ans_date_time: new Date(),
+        score: 0,
     };
 
     cy.stub(NewAnswer, 'validateHyperlink').returns(true);

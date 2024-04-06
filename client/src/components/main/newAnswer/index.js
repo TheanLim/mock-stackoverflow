@@ -38,6 +38,7 @@ const NewAnswer = ({ qid, handleAnswer }) => {
             text: text,
             ans_by: usrn,
             ans_date_time: new Date(),
+            score: 0,
         };
 
         const res = await NewAnswer.addAnswer(qid, answer);

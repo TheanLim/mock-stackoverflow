@@ -34,14 +34,14 @@ const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer }) => {
             />
             {question &&
                 question.answers &&
-                question.answers.map((a, idx) => (
-                    <Answer
-                        key={idx}
-                        text={a.text}
-                        ansBy={a.ans_by}
-                        meta={getMetaData(new Date(a.ans_date_time))}
-                    />
-                ))}
+                question.answers.map((a, idx) => {
+                  return <Answer
+                    key={idx}
+                    text={a.text}
+                    ansBy={a.ans_by.display_name}
+                    meta={getMetaData(new Date(a.ans_date_time))}
+                  />
+                })}
             <button
                 className="bluebtn ansButton"
                 onClick={() => {

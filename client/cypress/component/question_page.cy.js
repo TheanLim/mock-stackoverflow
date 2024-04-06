@@ -48,8 +48,9 @@ it('Rendering Question Body', () => {
         var newanswer = {
             aid: index,
             text: 'Sample Answer Text '+index,
-            ansBy: 'sampleanswereduser'+index,
+            ansBy: {display_name: 'sampleanswereduser'+index},
             ansDate: new Date(),
+            score: 0,
         };
         answers.push(newanswer)
     }
@@ -62,11 +63,13 @@ it('Rendering Question Body', () => {
         _id: '000fff111',
         title: 'Sample Question Title',
         text: 'Sample Question Text',
-        asked_by: 'vanshitatilwani',
+        asked_by: {display_name: 'vanshitatilwani'},
         ask_date_time: new Date('Jan 17, 2024 03:24'),
         views : 150,
         answers : answers,
-        tags: tlist
+        tags: tlist,
+        status: 'open',
+        score: 0,
     };
 
     const handleAnswerSpy = cy.spy().as('handleAnswerSpy')
@@ -82,7 +85,7 @@ it('Rendering Question Body', () => {
     cy.get('.postStats').contains(question.views + ' views')
     cy.get('.question_tags .question_tag_button').contains('Sample Tag 1')
     cy.get('.question_tags .question_tag_button').contains('Sample Tag 2')
-    cy.get('.lastActivity .question_author').contains(question.asked_by)
+    cy.get('.lastActivity .question_author').contains(question.asked_by.display_name)
     cy.get('.lastActivity .question_meta').contains('asked Jan 17 at 03:24')
     
     for (let index = 0; index < tlist.length; index++) {

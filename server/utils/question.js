@@ -1,22 +1,26 @@
 const Tag = require("../models/tags");
 const Question = require("../models/questions");
 const Answer = require("../models/answers");
+const Comment = require("../models/comments");
+const Vote = require("../models/votes");
+const User = require("../models/users");
+
 
 function getQuestions() {
   return Question.find()
-    .populate('tags')
-    .populate('answers');
+    .populate('tags answers comments votes solution asked_by');
 }
 
 const addTag = async (tname) => {
-    let tag = await Tag.findOne({name: tname});
-    if (tag) {
-      return tag._id;
-    } else {
-      let newTag = Tag({name: tname});
-      let newTagSaved = await newTag.save();
-      return newTagSaved._id;
-    }
+  const tagName = tname.toLowerCase();
+  let tag = await Tag.findOne({name: tagName});
+  if (tag) {
+    return tag._id;
+  } else {
+    let newTag = Tag({name: tagName});
+    let newTagSaved = await newTag.save();
+    return newTagSaved._id;
+  }
 };
 
 function checkTags(q, tags) {
@@ -100,4 +104,4 @@ const filterQuestionsBySearch = (qlist, search) => {
 };
 
 
-module.exports = { addTag, getQuestionsByOrder, filterQuestionsBySearch };
+module.exports = {addTag, getQuestionsByOrder, filterQuestionsBySearch};

@@ -72,6 +72,8 @@ const NewQuestion = ({ handleQuestions }) => {
             tags: tags,
             asked_by: usrn,
             ask_date_time: new Date(),
+            status: 'open',
+            score: 0,
         };
 
         const res = await NewQuestion.addQuestion(question);

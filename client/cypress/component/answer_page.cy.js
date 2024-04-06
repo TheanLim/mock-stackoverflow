@@ -21,20 +21,20 @@ it('Answer Header component shows question title, answer count and onclick funct
 
 // Answer Page - Question Body
 it('Component should have a question body which shows question text, views, asked by and asked', () => {
-    const questionBody = 'Sample Question Body'
-    const views = '150'
-    const askedBy = 'vanshitatilwani'
-    const date = new Date().toLocaleString()
+    const questionBody = 'Sample Question Body';
+    const views = '150';
+    const askedBy = {display_name: 'vanshitatilwani'};
+    const date = new Date().toLocaleString();
     cy.mount(<QuestionBody 
         text={questionBody}
         views={views} 
         askby={askedBy}
         meta={date}
-        />)
+        />);
     
     cy.get('.answer_question_text > div').contains(questionBody)
     cy.get('.answer_question_view').contains(views + ' views')
-    cy.get('.answer_question_right > .question_author').contains(askedBy)
+    cy.get('.answer_question_right > .question_author').contains(askedBy.display_name);
     cy.get('.answer_question_right > .answer_question_meta').contains('asked ' + date)
     
 })
@@ -66,18 +66,18 @@ it('Render a Answer Page Component and verify all details', () => {
         id: 1,
         title: 'How to test React components?',
         text: 'I want to learn how to test React components using Jest and Enzyme.',
-        asked_by: 'John Doe',
+        asked_by: {display_name: 'John Doe'},
         ask_date_time: '2023-04-03T12:00:00Z',
         views: 10,
         answers: [
           {
             text: 'You can use Jest as a test runner and Enzyme for rendering and traversing React components.',
-            ans_by: 'Jane Smith',
+            ans_by: {display_name: 'Jane Smith'},
             ans_date_time: '2023-04-03T13:00:00Z',
           },
           {
             text: 'You can use Jest as a test runner and Enzyme for rendering and traversing React components.',
-            ans_by: 'Jane Smith',
+            ans_by: {display_name: 'Jane Smith'},
             ans_date_time: '2023-04-03T13:00:00Z',
           },
         ],
@@ -99,19 +99,21 @@ it('Render a Answer Page Component and verify all details', () => {
 
     cy.get('.answer_question_text > div').contains(question.text)
     cy.get('.answer_question_view').contains(question.views + ' views')
-    cy.get('.answer_question_right > .question_author').contains(question.asked_by)
+    cy.get('.answer_question_right > .question_author').contains(question.asked_by.display_name)
     
     cy.get('.answerText')
     .eq(0)
     .find('div')
     .should('have.text', question.answers[0].text);
-    cy.get('.answerAuthor > .answer_author').eq(0).should('have.text', question.answers[0].ans_by)
+    cy.get('.answerAuthor > .answer_author').eq(0).should('have.text',
+      question.answers[0].ans_by.display_name)
 
     cy.get('.answerText')
     .eq(1) 
     .find('div')
     .should('have.text', question.answers[1].text);
-    cy.get('.answerAuthor > .answer_author').eq(0).should('have.text', question.answers[0].ans_by)
+    cy.get('.answerAuthor > .answer_author').eq(0).should('have.text',
+      question.answers[0].ans_by.display_name)
 
     cy.get('.ansButton').click();
     cy.get('@handleNewAnswerSpy').should('have.been.called');
