@@ -10,7 +10,7 @@ const addAnswer = async (req, res) => {
   try {
     let answerBody = req.body.ans;
     // TODO: IMPLEMENT USER DB OBJECT ACCESS
-    let answerOwner = await User.findById('660dcc9f87c1cfd5775ffc04');
+    let answerOwner = await User.findOne({email: 'test1@gmail.com'});
     answerBody.ans_by = answerOwner;
     let qid = req.body.qid;
     const newAnswer = await Answer.create(answerBody);

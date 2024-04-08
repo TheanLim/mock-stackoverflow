@@ -9,13 +9,13 @@ describe('New Answer Page 1', () => {
         cy.visit('http://localhost:3000');
         cy.contains('Programmatically navigate using React router').click();
         cy.contains('Answer Question').click();
-        cy.get('#answerUsernameInput').type('joym');
+        cy.get('#answerUsernameInput').type('mkrstulovic');
         cy.get('#answerTextInput').type(answers[0]);
         cy.contains('Post Answer').click();
         cy.get('.answerText').each(($el, index) => {
             cy.wrap($el).should('contain', answers[index]);
         });
-        cy.contains('joym');
+        cy.contains('mkrstulovic');
         cy.contains('0 seconds ago');
     });
 });

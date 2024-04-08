@@ -38,7 +38,7 @@ const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer }) => {
                   return <Answer
                     key={idx}
                     text={a.text}
-                    ansBy={a.ans_by.display_name}
+                    ansBy={a.ans_by}
                     meta={getMetaData(new Date(a.ans_date_time))}
                   />
                 })}

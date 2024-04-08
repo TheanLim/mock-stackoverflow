@@ -15,8 +15,8 @@ describe('All Tags 1', () => {
 
 describe('All Tags 2', () => {
     it('Tag names and count', () => {
-        const tagNames = ['react', 'javascript', 'android-studio', 'shared-preferences', 'storage', 'website', 'Flutter'];
-        const tagCounts = ['1 question', '2 questions', '2 questions', '2 questions', '2 questions', '1 question', '0 question'];
+        const tagNames = ['react', 'javascript', 'android-studio', 'shared-preferences', 'storage', 'website', 'flutter'];
+        const tagCounts = ['2 questions', '2 questions', '2 questions', '2 questions', '2 questions', '1 question', '0 question'];
         cy.visit('http://localhost:3000');
         cy.contains('Tags').click();
         cy.get('.tagNode').each(($el, index, $list) => {
@@ -34,7 +34,7 @@ describe('All Tags 3', () => {
         cy.contains('Programmatically navigate using React router');
         cy.contains('2 answers');
         cy.contains('10 views');
-        cy.contains('Joji John');
+        cy.contains('mkrstulovic');
         cy.contains('Jan 20');
         cy.contains('03:00');
     })

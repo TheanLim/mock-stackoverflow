@@ -23,7 +23,7 @@ describe('Answer Page 2', () => {
         cy.contains('Programmatically navigate using React router').click();
         cy.get('#questionBody').should('contain', '11 views');
         cy.get('#questionBody').should('contain', text);
-        cy.get('#questionBody').should('contain', 'Joji John');
+        cy.get('#questionBody').should('contain', 'mkrstulovic');
         cy.get('#questionBody').should('contain', 'Jan 20, 2022');
         cy.get('#questionBody').should('contain', '03:00');
     })
@@ -42,7 +42,7 @@ describe('Answer Page 3', () => {
 
 describe('Answer Page 4', () => {
     it('Answer Page displays expected authors', () => {
-        const authors = ['hamkalo', 'azad'];
+        const authors = ['mkrstulovic', 'thean'];
         const date = ['Nov 20','Nov 23'];
         const times = ['03:24','08:24'];
         cy.visit('http://localhost:3000');

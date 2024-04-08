@@ -113,17 +113,17 @@ const init = async () => {
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 1500
   );
   let u3 = await userCreate(
-    "test2@gmail.com", "Vote", "Up",
+    "test3@gmail.com", "Vote", "Up",
     "voteUp", "test123", "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
   );
   let u4 = await userCreate(
-    "test2@gmail.com", "Vote", "Down",
+    "test4@gmail.com", "Vote", "Down",
     "voteDown", "test123", "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 125
   );
   let u5 = await userCreate(
-    "test2@gmail.com", "Comment", "Here",
+    "test5@gmail.com", "Comment", "Here",
     "commenter", "test123", "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 50
   );

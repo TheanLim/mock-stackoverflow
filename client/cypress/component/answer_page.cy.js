@@ -42,7 +42,7 @@ it('Component should have a question body which shows question text, views, aske
 // Answer Page - Answer component
 it('Component should have a answer text ,answered by and answered date', () => {
     const answerText = 'Sample Answer Text'
-    const answeredBy = 'joydeepmitra'
+    const answeredBy = {display_name: 'mkrstulovic'}
     const date = new Date().toLocaleString()
     cy.mount(<Answer 
         text={answerText}
@@ -51,7 +51,7 @@ it('Component should have a answer text ,answered by and answered date', () => {
         />)
     
     cy.get('.answerText').contains(answerText)
-    cy.get('.answerAuthor > .answer_author').contains(answeredBy)
+    cy.get('.answerAuthor > .answer_author').contains(answeredBy.display_name)
     cy.get('.answerAuthor > .answer_question_meta').contains(date)
     
     

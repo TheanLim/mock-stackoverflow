@@ -9,7 +9,7 @@ const Answer = ({ text, ansBy, meta }) => {
                 {handleHyperlink(text)}
             </div>
             <div className="answerAuthor">
-                <div className="answer_author">{ansBy}</div>
+                <div className="answer_author">{ansBy && ansBy.display_name}</div>
                 <div className="answer_question_meta">{meta}</div>
             </div>
         </div>

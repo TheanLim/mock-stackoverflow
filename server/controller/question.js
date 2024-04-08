@@ -12,7 +12,7 @@ const getQuestionsByFilter = async (req, res) => {
     questions_list = filterQuestionsBySearch(questions_list, req.query.search);
     res.send(questions_list);
   } catch (err) {
-    res.status(500).json({err: err.message});
+    res.status(500).json({});
     //res.send("Error finding questions");
   }
 };
@@ -48,7 +48,7 @@ const getQuestionById = async (req, res) => {
       .populate('tags solution');
     res.json(question);
   } catch (err) {
-    res.status(500).json({err: err});
+    res.status(500).json({});
     //res.send("Unable to find Question.");
   }
 };
@@ -59,7 +59,7 @@ const addQuestion = async (req, res) => {
     let requestBody = req.body;
 
     // TODO: IMPLEMENT USER DB OBJECT ACCESS FOR QUESTIONS
-    const postOwner = await User.findById('660dcc9f87c1cfd5775ffc04');
+    const postOwner = await User.findOne({email: 'test1@gmail.com'});
     requestBody.asked_by = postOwner;
 
     requestBody.tags = await Promise.all(requestBody.tags.map(tname => addTag(tname)));

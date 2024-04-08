@@ -20,7 +20,7 @@ describe('Home Page 2', () => {
 describe('Home Page 3', () => {
     it('successfully shows total questions number', () => {
         cy.visit('http://localhost:3000');
-        cy.contains('4 questions');
+        cy.contains('5 questions');
     })
 })
 
@@ -57,7 +57,7 @@ describe('Home Page 7', () => {
 
 describe('Home Page 8', () => {
     it('successfully shows all questions in model', () => {
-        const qTitles = ['Quick question about storage on android', 'Object storage for a web application', 'android studio save string shared preference, start activity and load the saved string', "Programmatically navigate using React router"];
+        const qTitles = ['What does the Fox Say?', 'Quick question about storage on android', 'Object storage for a web application', 'android studio save string shared preference, start activity and load the saved string', "Programmatically navigate using React router"];
         cy.visit('http://localhost:3000');
         cy.get('.postTitle').each(($el, index, $list) => {
             cy.wrap($el).should('contain', qTitles[index]);
@@ -67,8 +67,8 @@ describe('Home Page 8', () => {
 
 describe('Home Page 9', () => {
     it('successfully shows all question stats', () => {
-        const answers = ['1 answers','2 answers','3 answers','2 answers'];
-        const views = ['103 views','200 views','121 views','10 views'];
+        const answers = ['0 answers', '1 answers','2 answers','3 answers','2 answers'];
+        const views = ['1030 views', '103 views','200 views','121 views','10 views'];
         cy.visit('http://localhost:3000');
         cy.get('.postStats').each(($el, index, $list) => {
             cy.wrap($el).should('contain', answers[index]);
@@ -79,9 +79,9 @@ describe('Home Page 9', () => {
 
 describe('Home Page 10', () => {
     it('successfully shows all question authors and date time', () => {
-        const authors = ['elephantCDE', 'monkeyABC', 'saltyPeter', 'Joji John'];
-        const date = ['Mar 10', 'Feb 18', 'Jan 10', 'Jan 20'];
-        const times = ['14:28', '01:02', '11:24', '03:00'];
+        const authors = ['commenter', 'voteDown', 'voteUp', 'thean', 'mkrstulovic'];
+        const date = ['Apr 01', 'Mar 10', 'Feb 18', 'Jan 10', 'Jan 20'];
+        const times = ['14:28', '14:28', '01:02', '11:24', '03:00'];
         cy.visit('http://localhost:3000');
         cy.get('.lastActivity').each(($el, index, $list) => {
             cy.wrap($el).should('contain', authors[index]);
@@ -93,7 +93,7 @@ describe('Home Page 10', () => {
 
 describe('Home Page 11', () => {
     it('successfully shows all questions in model in active order', () => {
-        const qTitles = ['Programmatically navigate using React router', 'android studio save string shared preference, start activity and load the saved string', 'Quick question about storage on android', 'Object storage for a web application'];
+        const qTitles = ['Programmatically navigate using React router', 'android studio save string shared preference, start activity and load the saved string', 'Quick question about storage on android', 'Object storage for a web application', 'What does the Fox Say?'];
         cy.visit('http://localhost:3000');
         cy.contains('Active').click();
         cy.get('.postTitle').each(($el, index, $list) => {
@@ -104,10 +104,10 @@ describe('Home Page 11', () => {
 
 describe('Home Page 12', () => {
     it('successfully shows all unanswered questions in model', () => {
-        const qTitles = ['android studio save string shared preference, start activity and load the saved string', 'Programmatically navigate using React router'];
+        const qTitles = ['What does the Fox Say?', 'android studio save string shared preference, start activity and load the saved string', 'Programmatically navigate using React router'];
         cy.visit('http://localhost:3000');
         cy.contains('Unanswered').click();
-        cy.contains('0 questions');
+        cy.contains('1 questions');
     })
 })
 

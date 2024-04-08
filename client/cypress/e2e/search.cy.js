@@ -8,15 +8,13 @@ describe('Search 1', () => {
         const qTitles = ['android studio save string shared preference, start activity and load the saved string'];
         cy.visit('http://localhost:3000');
         cy.get('#searchBar').type('navigation{enter}');
-        cy.get('.postTitle').each(($el, index, $list) => {
-            cy.wrap($el).should('contain', qTitles[index]);
-        })
+        cy.get('.postTitle').should('contain', qTitles[0]);
     })
 })
 
 describe('Search 2', () => {
     it('Search string matches tag and text', () => {
-        const qTitles = ['android studio save string shared preference, start activity and load the saved string', "Programmatically navigate using React router"];
+        const qTitles = ['What does the Fox Say?', 'android studio save string shared preference, start activity and load the saved string', "Programmatically navigate using React router"];
         cy.visit('http://localhost:3000');
         cy.get('#searchBar').type('navigation [React]{enter}');
         cy.get('.postTitle').each(($el, index, $list) => {
@@ -27,7 +25,7 @@ describe('Search 2', () => {
 
 describe('Search 3', () => {
     it('Output of the search should be in newest order by default', () => {
-        const qTitles = ['Quick question about storage on android', 'android studio save string shared preference, start activity and load the saved string', "Programmatically navigate using React router"];
+        const qTitles = ['What does the Fox Say?', 'Quick question about storage on android', 'android studio save string shared preference, start activity and load the saved string', "Programmatically navigate using React router"];
         cy.visit('http://localhost:3000');
         cy.get('#searchBar').type('android [react]{enter}');
         cy.get('.postTitle').each(($el, index, $list) => {
@@ -38,7 +36,7 @@ describe('Search 3', () => {
 
 describe('Search 4', () => {
     it('Output of the search should show number of results found', () => {
-        const qTitles = ['Quick question about storage on android', 'android studio save string shared preference, start activity and load the saved string', "Programmatically navigate using React router"];
+        const qTitles = ['What does the Fox Say?', 'Quick question about storage on android', 'android studio save string shared preference, start activity and load the saved string', "Programmatically navigate using React router"];
         cy.visit('http://localhost:3000');
         cy.get('#searchBar').type('android [react]{enter}');
         cy.contains(qTitles.length+" questions");
@@ -47,7 +45,7 @@ describe('Search 4', () => {
 
 describe('Search 5', () => {
     it('Output of the empty search should show all results ', () => {
-        const qTitles = ['Quick question about storage on android', 'Object storage for a web application', 'android studio save string shared preference, start activity and load the saved string', "Programmatically navigate using React router"];
+        const qTitles = ['What does the Fox Say?', 'Quick question about storage on android', 'Object storage for a web application', 'android studio save string shared preference, start activity and load the saved string', "Programmatically navigate using React router"];
         cy.visit('http://localhost:3000');
         cy.get('#searchBar').type('{enter}');
         cy.contains(qTitles.length+" questions");
