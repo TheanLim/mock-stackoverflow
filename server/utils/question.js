@@ -71,7 +71,6 @@ const getQuestionsByOrder = async (order) => {
       }
       return mostRecentAnswerB - mostRecentAnswerA;
     });
-    //console.log(questions);
   } else if (order === "unanswered") {
     questions = questions.filter(q => q.answers.length === 0);
   }

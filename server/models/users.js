@@ -1,4 +1,4 @@
-// Answer Document Schema
+// User Document Schema
 const mongoose = require("mongoose");
 
 const User = require("./schema/user");

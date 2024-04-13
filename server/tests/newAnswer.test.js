@@ -43,7 +43,7 @@ describe("POST /addAnswer", () => {
     }
 
     // Mock the create method of the Answer model
-    User.findOne = jest.fn().mockReturnValue(mockUser);
+    User.findById = jest.fn().mockReturnValue(mockUser);
     Answer.create.mockResolvedValueOnce(mockAnswer);
 
     // Mocking the Question.findOneAndUpdate method

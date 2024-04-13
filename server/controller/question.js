@@ -56,9 +56,7 @@ const addQuestion = async (req, res) => {
   try {
     let requestBody = req.body;
 
-    // TODO: IMPLEMENT USER DB OBJECT ACCESS FOR QUESTIONS
-    const postOwner = await User.findOne({email: 'test1@gmail.com'});
-    requestBody.asked_by = postOwner;
+    requestBody.asked_by = await User.findById(req.session.user);
 
     requestBody.tags = await Promise.all(requestBody.tags.map(tname => addTag(tname)));
 

@@ -5,7 +5,6 @@ it('mounts', () => {
     cy.get('#formTitleInput')
     cy.get('#formTextInput')
     cy.get('#formTagInput')
-    cy.get('#formUsernameInput')
     cy.get('.form_postBtn')
 })
 
@@ -30,20 +29,12 @@ it('shows tags inputted by user', () => {
     cy.get('#formTagInput').should('have.value', 'abc')
 })
 
-it('shows username inputted by user', () => {
-    cy.mount(<NewQuestion/>)
-    cy.get('#formUsernameInput').should('have.value', '')
-    cy.get('#formUsernameInput').type('abc')
-    cy.get('#formUsernameInput').should('have.value', 'abc')
-})
-
 it('shows error message when inputs are empty', () => {
     cy.mount(<NewQuestion/>)
     cy.get('.form_postBtn').click()
     cy.get('div .input_error').contains('Title cannot be empty')
     cy.get('div .input_error').contains('Question text cannot be empty')
     cy.get('div .input_error').contains('Should have at least 1 tag')
-    cy.get('div .input_error').contains('Username cannot be empty')
 })
 
 it('shows error message when title is more than 100 characters', () => {
@@ -72,7 +63,6 @@ it('addQuestion is called when click Post Question', () => {
         title: 'title1',
         text: 'question1',
         tags: ['tag1', 'tag2'],
-        asked_by: 'usr',
         ask_date_time: new Date(),
         status: 'open',
         score: 0,
@@ -86,7 +76,6 @@ it('addQuestion is called when click Post Question', () => {
     cy.get('#formTitleInput').type('title1')
     cy.get('#formTextInput').type('question1')
     cy.get('#formTagInput').type('tag1 tag2')
-    cy.get('#formUsernameInput').type('usr')
     cy.get('.form_postBtn').click();
     cy.get('@addQuestionStub').should('have.been.calledWith', question);
 })
@@ -98,7 +87,6 @@ it('handleQuestion is called when click Post Question', () => {
         title: 'title1',
         text: 'question1',
         tags: ['tag1', 'tag2'],
-        asked_by: 'usr',
         ask_date_time: new Date(),
         status: 'open',
         score: 0,
@@ -112,7 +100,6 @@ it('handleQuestion is called when click Post Question', () => {
     cy.get('#formTitleInput').type('title1')
     cy.get('#formTextInput').type('question1')
     cy.get('#formTagInput').type('tag1 tag2')
-    cy.get('#formUsernameInput').type('usr')
     cy.get('.form_postBtn').click();
     cy.get('@addQuestionStub').should('have.been.calledWith', question);
     cy.get('@handleQuestionsSpy').should('have.been.calledOnce');

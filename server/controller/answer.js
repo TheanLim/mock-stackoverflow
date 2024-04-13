@@ -9,9 +9,8 @@ const router = express.Router();
 const addAnswer = async (req, res) => {
   try {
     let answerBody = req.body.ans;
-    // TODO: IMPLEMENT USER DB OBJECT ACCESS
-    let answerOwner = await User.findOne({email: 'test1@gmail.com'});
-    answerBody.ans_by = answerOwner;
+
+    answerBody.ans_by = await User.findById(req.session.user);
     let qid = req.body.qid;
     const newAnswer = await Answer.create(answerBody);
     await Question.findOneAndUpdate(

@@ -7,9 +7,11 @@ const {default: mongoose} = require("mongoose");
 const Question = require('../models/questions');
 const User = require('../models/users');
 const {addTag, getQuestionsByOrder, filterQuestionsBySearch} = require('../utils/question');
+const bcrypt = require("bcrypt");
 
 // Mocking the models
 jest.mock("../models/questions");
+jest.mock("bcrypt");
 jest.mock('../utils/question', () => ({
   addTag: jest.fn(),
   getQuestionsByOrder: jest.fn(),
@@ -214,7 +216,6 @@ describe('POST /addQuestion', () => {
       text: 'Question 3 Text',
       tags: [tag1, tag2],
       answers: [ans1],
-      asked_by: user1,
     }
 
     User.findOne = jest.fn().mockImplementation(() => jest.fn().mockResolvedValueOnce(user1));

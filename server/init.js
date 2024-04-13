@@ -1,5 +1,7 @@
 // Setup database with initial test data.
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const SALT_ROUNDS = 10;
 
 const {MONGO_URL} = require("./config");
 
@@ -95,6 +97,7 @@ function questionCreate(
 
 const init = async () => {
   console.log('insert test data into the database')
+  let fakePassword = await bcrypt.hash("test123", SALT_ROUNDS);
   let t1 = await tagCreate('react');
   let t2 = await tagCreate('javascript');
   let t3 = await tagCreate('android-studio');
@@ -104,27 +107,27 @@ const init = async () => {
   let t7 = await tagCreate('flutter');
   let u1 = await userCreate(
     "test1@gmail.com", "Marko", "Krstulovic",
-    "mkrstulovic", "test123", "I AM A CODER. I LOVE CODE.",
+    "mkrstulovic", fakePassword, "I AM A CODER. I LOVE CODE.",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 40000
   );
   let u2 = await userCreate(
     "test2@gmail.com", "Thean", "Lim",
-    "thean", "test123", "I AM A CODER. I LOVE CODE.",
+    "thean", fakePassword, "I AM A CODER. I LOVE CODE.",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 1500
   );
   let u3 = await userCreate(
     "test3@gmail.com", "Vote", "Up",
-    "voteUp", "test123", "",
+    "voteUp", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
   );
   let u4 = await userCreate(
     "test4@gmail.com", "Vote", "Down",
-    "voteDown", "test123", "",
+    "voteDown", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 125
   );
   let u5 = await userCreate(
     "test5@gmail.com", "Comment", "Here",
-    "commenter", "test123", "",
+    "commenter", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 50
   );
   let v1 = await voteCreate(

@@ -2,28 +2,12 @@ import NewAnswer from '../../src/components/main/newAnswer/index';
 
 it('mounts', () => {
     cy.mount(<NewAnswer/>)
-    cy.get('#answerUsernameInput')
     cy.get('#answerTextInput')
     cy.get('.form_postBtn')
 })
 
-it('shows error message when both input is empty', () => {
+it('shows error message when both answer text is empty', () => {
     cy.mount(<NewAnswer/>)
-    cy.get('.form_postBtn').click()
-    cy.get('div .input_error').contains('Username cannot be empty')
-    cy.get('div .input_error').contains('Answer text cannot be empty')
-})
-
-it('shows username inputted by user', () => {
-    cy.mount(<NewAnswer/>)
-    cy.get('#answerUsernameInput').should('have.value', '')
-    cy.get('#answerUsernameInput').type('abc')
-    cy.get('#answerUsernameInput').should('have.value', 'abc')
-})
-
-it('shows error message when text is empty', () => {
-    cy.mount(<NewAnswer/>)
-    cy.get('#answerUsernameInput').type('abc')
     cy.get('.form_postBtn').click()
     cy.get('div .input_error').contains('Answer text cannot be empty')
 })
@@ -40,7 +24,6 @@ it('addAnswer is called when click Post Answer', () => {
     const qid = 123;
     const answer = {
         text: 'abc',
-        ans_by: 'usr',
         ans_date_time: new Date(),
         score: 0,
     };
@@ -50,7 +33,6 @@ it('addAnswer is called when click Post Answer', () => {
 
     cy.mount(<NewAnswer qid={qid} handleAnswer={()=>{}} />)
 
-    cy.get('#answerUsernameInput').type('usr')
     cy.get('#answerTextInput').type('abc')
     cy.get('.form_postBtn').click();
     cy.get('@addAnswerStub').should('have.been.calledWith', qid, answer);
@@ -62,7 +44,6 @@ it('handleAnswer is called when click Post Answer', () => {
     const qid = 123;
     const answer = {
         text: 'abc',
-        ans_by: 'usr',
         ans_date_time: new Date(),
         score: 0,
     };
@@ -72,7 +53,6 @@ it('handleAnswer is called when click Post Answer', () => {
 
     cy.mount(<NewAnswer qid={qid} handleAnswer={handleAnswer} />)
     
-    cy.get('#answerUsernameInput').type('usr')
     cy.get('#answerTextInput').type('abc')
     cy.get('.form_postBtn').click();
     cy.get('@addAnswerStub').should('have.been.calledWith', qid, answer);

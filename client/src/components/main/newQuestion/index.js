@@ -11,12 +11,10 @@ const NewQuestion = ({ handleQuestions }) => {
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
     const [tag, setTag] = useState("");
-    const [usrn, setUsrn] = useState("");
 
     const [titleErr, setTitleErr] = useState("");
     const [textErr, setTextErr] = useState("");
     const [tagErr, setTagErr] = useState("");
-    const [usrnErr, setUsrnErr] = useState("");
 
     const postQuestion = async () => {
         let isValid = true;
@@ -57,11 +55,6 @@ const NewQuestion = ({ handleQuestions }) => {
             }
         }
 
-        if (!usrn) {
-            setUsrnErr("Username cannot be empty");
-            isValid = false;
-        }
-
         if (!isValid) {
             return;
         }
@@ -70,7 +63,6 @@ const NewQuestion = ({ handleQuestions }) => {
             title: title,
             text: text,
             tags: tags,
-            asked_by: usrn,
             ask_date_time: new Date(),
             status: 'open',
             score: 0,
@@ -107,13 +99,6 @@ const NewQuestion = ({ handleQuestions }) => {
                 val={tag}
                 setState={setTag}
                 err={tagErr}
-            />
-            <Input
-                title={"Username"}
-                id={"formUsernameInput"}
-                val={usrn}
-                setState={setUsrn}
-                err={usrnErr}
             />
             <div className="btn_indicator_container">
                 <button
