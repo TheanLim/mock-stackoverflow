@@ -21,8 +21,7 @@ const addAnswer = async (req, res) => {
     );
     res.json(newAnswer);
   } catch (err) {
-    res.status(500).json({});
-    //res.send("Failed to create answer");
+    res.status(500).json({error: "Failed to create answer."});
   }
 };
 

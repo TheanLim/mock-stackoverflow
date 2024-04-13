@@ -20,8 +20,7 @@ const getTagsWithQuestionNumber = async (req, res) => {
     }
     res.json(tagReturn);
   } catch (err) {
-    res.status(500).json({});
-    //res.send("Unable to get tags and question numbers");
+    res.status(500).json({error: "Unable to get tags and question numbers"});
   }
 };
 

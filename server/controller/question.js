@@ -12,8 +12,7 @@ const getQuestionsByFilter = async (req, res) => {
     questions_list = filterQuestionsBySearch(questions_list, req.query.search);
     res.send(questions_list);
   } catch (err) {
-    res.status(500).json({});
-    //res.send("Error finding questions");
+    res.status(500).json({error: "Failed to find questions."});
   }
 };
 
@@ -48,8 +47,7 @@ const getQuestionById = async (req, res) => {
       .populate('tags solution');
     res.json(question);
   } catch (err) {
-    res.status(500).json({});
-    //res.send("Unable to find Question.");
+    res.status(500).json({error: "Failed to find question."});
   }
 };
 
@@ -67,8 +65,7 @@ const addQuestion = async (req, res) => {
     const createdQuestion = await Question.create(requestBody);
     res.json(createdQuestion);
   } catch (err) {
-    res.status(500).json({});
-    //res.send("Unable to add Question.");
+    res.status(500).json({error: "Failed to create question."});
   }
 };
 
