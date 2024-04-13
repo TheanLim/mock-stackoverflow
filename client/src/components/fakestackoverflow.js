@@ -10,7 +10,6 @@ export default function FakeStackOverflow() {
   const [user, setUser] = useState(null);
   const [csrfToken, setCsrfToken] = useState('');
 
-
   const setQuestionPage = (search = "", title = "All Questions") => {
     setSearch(search);
     setMainTitle(title);

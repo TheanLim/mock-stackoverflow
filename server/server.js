@@ -31,6 +31,15 @@ app.use(
 
 app.use(express.json());
 
+app.use(
+  cors({
+      credentials: true,
+      origin: [CLIENT_URL],
+  })
+);
+
+app.use(express.json());
+
 app.get("/", (_, res) => {
     res.send("Fake SO Server Dummy Endpoint");
     res.end();

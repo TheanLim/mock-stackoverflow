@@ -9,7 +9,6 @@ const router = express.Router();
 const addAnswer = async (req, res) => {
   try {
     let answerBody = req.body.ans;
-
     answerBody.ans_by = await User.findById(req.session.user);
     let qid = req.body.qid;
     const newAnswer = await Answer.create(answerBody);

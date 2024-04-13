@@ -23,7 +23,6 @@ describe('New Answer Page 1', () => {
     });
 });
 
-
 describe('New Answer Page 2', () => {
     it('Answer is mandatory when creating a new answer', () => {
         cy.visit('http://localhost:3000');
@@ -37,7 +36,6 @@ describe('New Answer Page 2', () => {
         cy.contains('Answer text cannot be empty');
     });
 });
-
 
 describe('New Answer Page 3', () => {
     it('successfully displays the answer textbox for the new answer page', () => {

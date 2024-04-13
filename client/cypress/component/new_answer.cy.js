@@ -52,7 +52,7 @@ it('handleAnswer is called when click Post Answer', () => {
     cy.stub(NewAnswer, 'addAnswer').as('addAnswerStub').resolves({_id:"0000ffff", ...answer});
 
     cy.mount(<NewAnswer qid={qid} handleAnswer={handleAnswer} />)
-    
+
     cy.get('#answerTextInput').type('abc')
     cy.get('.form_postBtn').click();
     cy.get('@addAnswerStub').should('have.been.calledWith', qid, answer);
