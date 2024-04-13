@@ -126,7 +126,7 @@ describe('GET /getQuestionById/:qid', () => {
     await mongoose.disconnect()
   });
 
-  it('returns an error if the id is not provided', async () => {
+  it('returns an error if an error occurs', async () => {
     const mockReqParams = {
       qid: '{$ne: ""}',
     };
@@ -152,7 +152,7 @@ describe('GET /getQuestionById/:qid', () => {
 
     // Asserting the response
     expect(response.status).toBe(500);
-    expect(response.body).toEqual({});
+    expect(response.body).toEqual({error: "Failed to find question."});
   });
 
   it('should return a question by id and increment its views by 1', async () => {
