@@ -132,6 +132,8 @@ const Main = ({
           qid={qid}
           handleNewQuestion={handleNewQuestion}
           handleNewAnswer={handleNewAnswer}
+          user={user}
+          handleLogin={handleLogin}
         />
       );
       break;

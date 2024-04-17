@@ -14,7 +14,7 @@ const Question = ({ q, clickTag, handleAnswer }) => {
                 <div>{q.views} views</div>
             </div>
             <div className="question_mid">
-                <div className="postTitle">{q.title}</div>
+                <div className="postTitle">{q.status === 'closed'? `${q.title} [closed]`: q.title}</div>
                 <div className="question_tags">
                     {q.tags.map((tag, idx) => {
                         return (

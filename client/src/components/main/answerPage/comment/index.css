@@ -1,0 +1,103 @@
+.comment {
+    display: flex;
+    flex-direction: row;
+    border-bottom: #e2e2e2 1px solid;
+    padding: 1% 1% 1% 1%;
+    font-size: 0.85em
+}
+
+.comment_text {
+    width: 75%;
+    display: flex;
+}
+
+.comment_details {
+    display: flex;
+}
+
+.comment_dash {
+    margin-left: 3px;
+}
+
+.comment_meta {
+    margin-left: 3px;
+}
+
+.comment_author {
+    margin-left: 3px;
+    color: green;
+}
+
+.comment_meta {
+    color: #bbbbbb;
+}
+
+.comment_button {
+    border: none;
+    background-color: transparent;
+    color: #bbbbbb;
+}
+
+.upvote{
+    margin-bottom: 5px;
+    border:none;
+    background-color: transparent;
+    margin: auto;
+    font-size: large; 
+}
+.upvote-transparent{
+    color: #bbbbbb
+}
+.upvote-transparent:hover {
+    color: black;
+    cursor: pointer;
+}
+
+.upvote-black{
+    color: black;
+    background-color: transparent;
+}
+
+.upvote-black:hover {
+    cursor: pointer;
+}
+
+.comment_score{
+    align-content:center;
+}
+
+
+.flag{
+    margin-bottom: 5px;
+    border:none;
+    background-color: transparent;
+    margin: auto;
+}
+.flag-transparent{
+    color: #bbbbbb
+}
+.flag-transparent:hover {
+    color: black;
+    cursor: pointer;
+}
+
+.flag-black{
+    color: black;
+    background-color: transparent;
+}
+
+.flag-black:hover {
+    cursor: pointer;
+}
+
+.vote_flag{
+    display: grid;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.no-hover:hover {
+    background-color: inherit;
+    color: inherit;
+    cursor: default;
+  }

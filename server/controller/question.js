@@ -19,35 +19,43 @@ const getQuestionsByFilter = async (req, res) => {
 // To get Questions by Id
 const getQuestionById = async (req, res) => {
   try {
+    let incrementView = req.query.incrementView !== 'false'; 
     const question = await Question.findOneAndUpdate(
       {_id: req.params.qid},
-      { $inc: { views: 1 } }, { new: true })
+      incrementView ? { $inc: { views: 1 } } : {}, 
+      { new: true }
+      )
       .populate({
-        path : 'answers',
-        populate : {
-          path : 'ans_by',
-          select: 'display_name'
-        }
+        path: 'tags',
+        model: 'Tag'
       })
       .populate({
-        path : 'comments',
-        populate : {
-          path : 'comment_by',
-          select: 'display_name'
-        }
+        path: 'answers',
+        model: 'Answer',
+        populate: [
+          { path: 'votes', model: 'Vote'},
+          { path: 'ans_by', model: 'User'},
+          { path: 'comments', model: 'Comment', populate: [
+            { path: 'comment_by', model: 'User'},
+            { path: 'votes', model: 'Vote'}
+          ]},
+        ]
       })
       .populate({
-        path : 'votes',
-        populate : {
-          path : 'voter',
-          select: 'display_name'
-        }
+        path: 'comments',
+        model: 'Comment',
+        populate: [
+          { path: 'comment_by', model: 'User'},
+          { path: 'votes', model: 'Vote'}
+        ],
       })
-      .populate('asked_by', 'display_name')
-      .populate('tags solution');
-    res.json(question);
+      .populate('solution')
+      .populate('asked_by')
+      .populate('votes')
+
+    res.json(question.toJSON({virtuals:true}));
   } catch (err) {
-    res.status(500).json({error: "Failed to find question."});
+    res.status(500).json({error: "Failed to find questions."});
   }
 };
 
@@ -55,23 +63,18 @@ const getQuestionById = async (req, res) => {
 const addQuestion = async (req, res) => {
   try {
     let requestBody = req.body;
-
     requestBody.asked_by = await User.findById(req.session.user);
-
     requestBody.tags = await Promise.all(requestBody.tags.map(tname => addTag(tname)));
 
     const createdQuestion = await Question.create(requestBody);
     res.json(createdQuestion);
   } catch (err) {
-    res.status(500).json({error: "Failed to create question."});
+    res.status(500).json({});
   }
 };
-
 
 router.get("/getQuestion", getQuestionsByFilter);
 router.get("/getQuestionById/:qid", getQuestionById);
 router.post("/addQuestion", addQuestion);
-
-// add appropriate HTTP verbs and their endpoints to the router
 
 module.exports = router;

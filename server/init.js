@@ -22,8 +22,8 @@ function tagCreate(name) {
   return tag.save();
 }
 
-function answerCreate(text, ans_by, ans_date_time, comments, votes, score) {
-  let answerdetail = {text: text, score: score};
+function answerCreate(text, ans_by, ans_date_time, comments, votes) {
+  let answerdetail = {text: text};
   if (comments !== false) answerdetail.comments = comments;
   if (votes !== false) answerdetail.votes = votes;
   if (ans_by !== false) answerdetail.ans_by = ans_by;
@@ -75,7 +75,7 @@ function voteCreate(voter, vote_type, vote_reason) {
 function questionCreate(
   title, text, tags, answers,
   asked_by, ask_date_time, views, comments,
-  votes, solution, score, status) {
+  votes, solution, status) {
   let qstndetail = {
     title: title,
     text: text,
@@ -88,7 +88,6 @@ function questionCreate(
   if (ask_date_time !== false) qstndetail.ask_date_time = ask_date_time;
   if (views !== false) qstndetail.views = views;
   if (solution !== false) qstndetail.solution = solution;
-  if (score !== false) qstndetail.score = score;
   if (status !== false) qstndetail.status = status;
 
   let qstn = new Question(qstndetail);
@@ -130,6 +129,58 @@ const init = async () => {
     "commenter", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 50
   );
+
+  // Added more 'CloseReopenErs' to test Close/Reopen a post
+  await userCreate(
+    "c1@gmail.com", "CloseReopenErs", "CloseReopenErs",
+    "CloseReopenErs", fakePassword, "",
+    new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 3000
+  );
+  await userCreate(
+    "c2@gmail.com", "CloseReopenErs", "CloseReopenErs",
+    "CloseReopenErs", fakePassword, "",
+    new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 3000
+  );
+  await userCreate(
+    "c3@gmail.com", "CloseReopenErs", "CloseReopenErs",
+    "CloseReopenErs", fakePassword, "",
+    new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 3000
+  );
+  //
+
+  // Added more 'Flaggers' to test flagging a post until it gets deleted.
+  await userCreate(
+    "f1@gmail.com", "Flagger", "Flagger",
+    "Flagger", fakePassword, "",
+    new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
+  );
+  await userCreate(
+    "f2@gmail.com", "Flagger", "Flagger",
+    "Flagger", fakePassword, "",
+    new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
+  );
+  await userCreate(
+    "f3@gmail.com", "Flagger", "Flagger",
+    "Flagger", fakePassword, "",
+    new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
+  );
+  await userCreate(
+    "f4@gmail.com", "Flagger", "Flagger",
+    "Flagger", fakePassword, "",
+    new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
+  );
+  await userCreate(
+    "f5@gmail.com", "Flagger", "Flagger",
+    "Flagger", fakePassword, "",
+    new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
+  );
+  await userCreate(
+    "f6@gmail.com", "Flagger", "Flagger",
+    "Flagger", fakePassword, "",
+    new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
+  );
+  // End adding flaggers
+
   let v1 = await voteCreate(
     u1, "close", "Bad Question"
   );
@@ -174,48 +225,48 @@ const init = async () => {
   );
   let a1 = await answerCreate('React Router is mostly a wrapper around the history library. history handles interaction with the browser\'s window.history for you with its browser and hash histories. It also provides a memory history which is useful for environments that don\'t have a global history. This is particularly useful in mobile app development (react-native) and unit testing with Node.',
     u1, new Date('2023-11-20T03:24:42'), [c1],
-    [v2, v3], 2);
+    [v2, v3]);
   let a2 = await answerCreate('On my end, I like to have a single history object that I can carry even outside components. I like to have a single history.js file that I import on demand, and just manipulate it. You just have to change BrowserRouter to Router, and specify the history prop. This doesn\'t change anything for you, except that you have your own history object that you can manipulate as you want. You need to install history, the library used by react-router.',
     u2, new Date('2023-11-23T08:24:00'), [],
-    [v2], 1);
+    [v2]);
   let a3 = await answerCreate('Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background.',
     u3, new Date('2023-11-18T09:24:00'), [],
-    [v2, v3], 2);
+    [v2, v3]);
   let a4 = await answerCreate('YourPreference yourPrefrence = YourPreference.getInstance(context); yourPreference.saveData(YOUR_KEY,YOUR_VALUE);',
     u4, new Date('2023-11-12T03:30:00'), [c2],
-    [v2, v4], 0);
+    [v2, v4]);
   let a5 = await answerCreate('I just found all the above examples just too confusing, so I wrote my own. ',
     u5, new Date('2023-11-01T15:24:19'), [],
-    [v4, v5b], -1);
+    [v4, v5b]);
   let a6 = await answerCreate('Storing content as BLOBs in databases.',
     u1, new Date('2023-02-19T18:20:59'), [],
-    [], 0);
+    []);
   let a7 = await answerCreate('Using GridFS to chunk and store content.',
     u2, new Date('2023-02-22T17:19:00'), [c3],
-    [], 0);
+    []);
   let a8 = await answerCreate('Store data in a SQLLite database.',
     u3, new Date('2023-03-22T21:17:53'), [],
-    [v5], 0);
+    [v5]);
   await questionCreate('Programmatically navigate using React router',
     'the alert shows the proper index for the li clicked, and when I alert the variable within the last function Im calling, moveToNextImage(stepClicked), the same value shows but the animation isnt happening. This works many other ways, but Im trying to pass the index value of the list item clicked to use for the math to calculate.',
     [t1, t2], [a1, a2], u1, new Date('2022-01-20T03:00:00'), 10,
-    [c4], [v2, v3], a1, 2, "open");
+    [c4], [v2, v3], a1, "open");
   await questionCreate('android studio save string shared preference, start activity and load the saved string',
     'I am using bottom navigation view but am using custom navigation, so my fragments are not recreated every time i switch to a different view. I just hide/show my fragments depending on the icon selected. The problem i am facing is that whenever a config change happens (dark/light theme), my app crashes. I have 2 fragments in this activity and the below code is what i am using to refrain them from being recreated.',
     [t3, t4, t2], [a3, a4, a5], u2, new Date('2023-01-10T11:24:30'), 121,
-    [c5], [v2], a3, 1, "open");
+    [c5], [v2], a3, "open");
   await questionCreate('Object storage for a web application',
     'I am currently working on a website where, roughly 40 million documents and images should be served to its users. I need suggestions on which method is the most suitable for storing content with subject to these requirements.',
     [t5, t6], [a6, a7], u3, new Date('2023-02-18T01:02:15'), 200,
-    [], [v2, v3, v4], null, 2, "open");
+    [], [v2, v3, v4], null, "open");
   await questionCreate('Quick question about storage on android',
     'I would like to know the best way to go about storing an array on an android phone so that even when the app/activity ended the data remains',
     [t3, t4, t5], [a8], u4, new Date('2023-03-10T14:28:01'), 103,
-    [], [], null, 0, "open");
+    [], [], null, "open");
   await questionCreate('What does the Fox Say?',
     'I really need to know what the fox says. Somebody help!!!',
     [t1], [], u5, new Date('2023-04-01T14:28:01'), 1030,
-    [], [v1, v1b, v1c, v4, v6], null, -1, "closed");
+    [], [v4, v6], null, "closed");
 
   if (db) db.close();
 

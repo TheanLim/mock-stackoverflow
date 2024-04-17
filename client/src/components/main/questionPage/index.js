@@ -32,10 +32,10 @@ const QuestionPage = ({
                 handleNewQuestion={handleNewQuestion}
             />
             <div id="question_list" className="question_list">
-                {qlist.map((q, idx) => (
+                {qlist.map(q => (
                     <Question
                         q={q}
-                        key={idx}
+                        key={q._id}
                         clickTag={clickTag}
                         handleAnswer={handleAnswer}
                     />

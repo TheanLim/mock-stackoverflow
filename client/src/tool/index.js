@@ -93,4 +93,18 @@ const handleHyperlink = (text = "") => {
     return <div dangerouslySetInnerHTML={{ __html: replacedText }} />;
 };
 
-export { getMetaData, handleHyperlink, validateHyperlink };
+const loginWrapper = (user, handleLogin) => {
+    const wrappedFunction = (func) => {
+        return (...args) => {
+            if (!user) {
+                handleLogin();
+            } else {
+                func(...args);
+            }
+        };
+    };
+
+    return wrappedFunction;
+};
+
+export { getMetaData, handleHyperlink, validateHyperlink, loginWrapper };

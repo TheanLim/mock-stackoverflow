@@ -1,4 +1,5 @@
 const express = require("express");
+const { Types } = require('mongoose');
 const Answer = require("../models/answers");
 const Question = require("../models/questions");
 const User = require("../models/users");
@@ -9,6 +10,7 @@ const router = express.Router();
 const addAnswer = async (req, res) => {
   try {
     let answerBody = req.body.ans;
+
     answerBody.ans_by = await User.findById(req.session.user);
     let qid = req.body.qid;
     const newAnswer = await Answer.create(answerBody);
@@ -19,12 +21,41 @@ const addAnswer = async (req, res) => {
     );
     res.json(newAnswer);
   } catch (err) {
-    res.status(500).json({error: "Failed to create answer."});
+    res.status(500).json({error: err.message});
   }
 };
 
-// add appropriate HTTP verbs and their endpoints to the router.
-router.post('/addAnswer', addAnswer);
+const markAnswerAsSolution = async (req, res) => {
+  try {
+    const qid = req.body.qid;
+    const aid = req.body.aid;
+    const aidObjectId = new Types.ObjectId(aid);
 
+    // Check if solution is already set
+    let updatedQuestion;
+    const existingQuestion = await Question.findById(qid);
+    if (existingQuestion.solution && existingQuestion.solution.equals(aidObjectId)) {
+      // If solution was set
+      updatedQuestion = await Question.findOneAndUpdate(
+        { _id: qid },
+        { $unset: { solution: "" } },
+        { new: true }
+      );
+    } else {
+      // If solution was not set
+      updatedQuestion = await Question.findOneAndUpdate(
+        { _id: qid },
+        { $set: { solution: aid } },
+        { new: true }
+      );
+    }
+    res.json(updatedQuestion)
+  } catch (err) {
+    res.status(500).json({error: err.message});
+  }
+};
+
+router.post('/addAnswer', addAnswer);
+router.post('/markAnswerAsSolution', markAnswerAsSolution);
 
 module.exports = router;

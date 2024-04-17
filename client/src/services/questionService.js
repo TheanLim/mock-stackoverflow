@@ -12,8 +12,13 @@ const getQuestionsByFilter = async (order = "newest", search = "") => {
 };
 
 // To get Questions by id
-const getQuestionById = async (qid) => {
-    const res = await api.get(`${QUESTION_API_URL}/getQuestionById/${qid}`);
+const getQuestionById = async (qid, incrementView = true) => {
+    let res;
+    if (incrementView) {
+        res = await api.get(`${QUESTION_API_URL}/getQuestionById/${qid}`);
+    } else {
+        res = await api.get(`${QUESTION_API_URL}/getQuestionById/${qid}?incrementView=false`);
+    }
 
     return res.data;
 };

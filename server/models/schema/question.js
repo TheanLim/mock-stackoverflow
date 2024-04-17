@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 // Schema for questions
-module.exports = mongoose.Schema(
+const questionSchema = mongoose.Schema(
   {
     _id: {type: mongoose.Schema.Types.ObjectId, auto: true},
     title: {type: String, required: true},
@@ -13,7 +13,6 @@ module.exports = mongoose.Schema(
     answers: [{type: mongoose.Schema.Types.ObjectId, ref: 'Answer'}],
     comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}],
     votes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Vote'}],
-    score: {type: Number, default: 0, required: true},
     solution: {type: mongoose.Schema.Types.ObjectId, ref: 'Answer'},
     status: {
       type: String,
@@ -23,3 +22,38 @@ module.exports = mongoose.Schema(
   },
   {collection: "Question"}
 );
+
+// postOwner as the generic name of the user created the 'Post'
+questionSchema.virtual('postOwner', {
+  ref: 'User',
+  localField: 'asked_by',
+  foreignField: '_id',
+  justOne: true
+});
+
+
+questionSchema.virtual('score').get(function(){
+  if (this.votes.length === 0) {
+    return 0;
+  }
+  let upvotes = this.votes.filter(vote => vote.vote_type === 'upvote').length;
+  let downvotes = this.votes.filter(vote => vote.vote_type === 'downvote').length;
+  return upvotes - downvotes;
+});
+
+questionSchema.pre('deleteOne', async function(next) {
+  const modelId = this.getQuery()['_id'];
+  const model = await this.model.findOne({ _id: modelId })
+        .populate('answers comments votes');
+    
+    // Iterate through each reference and delete them
+    await Promise.all([
+        ...model.comments.map(comment => comment.deleteOne()),
+        ...model.answers.map(answer => answer.deleteOne()),
+        ...model.votes.map(vote => vote.deleteOne())
+    ]);
+
+    next();
+});
+
+module.exports = questionSchema;
