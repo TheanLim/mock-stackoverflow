@@ -93,6 +93,6 @@ it('Rendering Question Body', () => {
         cy.get('@clickTagSpy').should('have.been.calledWith', tlist[index].name);
     }
 
-    cy.get('.question').click({ force: true })
+    cy.get('.postTitle').click({ force: true })
     cy.get('@handleAnswerSpy').should('have.been.calledOnceWith', question._id)
 })

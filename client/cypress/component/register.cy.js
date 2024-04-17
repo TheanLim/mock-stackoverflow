@@ -1,6 +1,5 @@
 import React from 'react'
 import Register from '../../src/components/main/register'
-import Login from "../../src/components/main/login";
 
 it('mounts', () => {
   cy.mount(<Register
@@ -234,6 +233,70 @@ it('updateUser is called when click Register', () => {
   cy.get('#formLastNameInput').type('User')
   cy.get('.form_postBtn').click();
   cy.get('@registerNewUserStub').should('have.been.calledWith', user);
+})
+
+it('shows an error if the email already exists', () => {
+  const updateUserSpy = cy.spy().as('updateUserSpy');
+  const user = {
+    email: 'test@gmail.com',
+    password: 'test123',
+    display_name: 'test',
+    first_name: 'Test',
+    last_name: 'User',
+  }
+
+  cy.stub(Register, 'registerNewUser').as('registerNewUserStub').resolves(
+    {error: "Email already exists"}
+  );
+
+  cy.mount(<Register
+    handleRedirect={() => {}}
+    handleLogin={() => {}}
+    updateUser={updateUserSpy}
+    csrfToken="MockCSRFToken"
+    setCsrfToken={() => {}}
+  />)
+
+  cy.get('#formEmailInput').type('test@gmail.com')
+  cy.get('#formPasswordInput').type('test123')
+  cy.get('#formUsernameInput').type('test')
+  cy.get('#formFirstNameInput').type('Test')
+  cy.get('#formLastNameInput').type('User')
+  cy.get('.form_postBtn').click();
+  cy.get('@registerNewUserStub').should('have.been.calledWith', user);
+  cy.get('div .input_error').contains("Email already exists");
+})
+
+it('shows an error if the display name already exists', () => {
+  const updateUserSpy = cy.spy().as('updateUserSpy');
+  const user = {
+    email: 'test@gmail.com',
+    password: 'test123',
+    display_name: 'test',
+    first_name: 'Test',
+    last_name: 'User',
+  }
+
+  cy.stub(Register, 'registerNewUser').as('registerNewUserStub').resolves(
+    {error: "Display Name already exists"}
+  );
+
+  cy.mount(<Register
+    handleRedirect={() => {}}
+    handleLogin={() => {}}
+    updateUser={updateUserSpy}
+    csrfToken="MockCSRFToken"
+    setCsrfToken={() => {}}
+  />)
+
+  cy.get('#formEmailInput').type('test@gmail.com')
+  cy.get('#formPasswordInput').type('test123')
+  cy.get('#formUsernameInput').type('test')
+  cy.get('#formFirstNameInput').type('Test')
+  cy.get('#formLastNameInput').type('User')
+  cy.get('.form_postBtn').click();
+  cy.get('@registerNewUserStub').should('have.been.calledWith', user);
+  cy.get('div .input_error').contains("Display Name already exists");
 })
 
 it('handleLogin is called when click Have Account? Login.', () => {

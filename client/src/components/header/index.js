@@ -9,7 +9,7 @@ const Header = ({search, setQuestionPage, updateAppStatus, loggedIn, updateUser,
     await Header.logOutUser(csrfToken);
     updateUser(null);
     setCsrfToken("");
-    updateAppStatus("logged_out");
+    updateAppStatus("logging_out");
   }
 
   const renderLoginBtn = () => {

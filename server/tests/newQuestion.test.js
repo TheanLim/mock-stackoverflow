@@ -7,7 +7,6 @@ const {default: mongoose} = require("mongoose");
 const Question = require('../models/questions');
 const User = require('../models/users');
 const {addTag, getQuestionsByOrder, filterQuestionsBySearch} = require('../utils/question');
-const bcrypt = require("bcrypt");
 
 // Mocking the models
 jest.mock("../models/questions");

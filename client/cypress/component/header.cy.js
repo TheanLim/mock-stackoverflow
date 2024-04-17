@@ -138,7 +138,7 @@ it('logOutUser is called when click Sign Out', () => {
 
 it('updateAppStatus is called when click Sign Out', () => {
     const searchQuery = 'test search';
-    const newStatus = 'logged_out';
+    const newStatus = 'logging_out';
     const loggedInUser = 'logged_in';
     const csrfTokenMock = "MockCSRFToken";
     const setQuestionPageSpy = cy.spy().as('setQuestionPageSpy');

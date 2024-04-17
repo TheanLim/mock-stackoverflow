@@ -31,7 +31,7 @@ const registerNewUser = async (req, csrfToken) => {
   }
   );
 
-  return res.data;
+  return res.data || res.response.data;
 };
 
 //Check if user is currently logged in, returning ID

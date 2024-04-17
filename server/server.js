@@ -49,6 +49,7 @@ const questionController = require("./controller/question");
 const tagController = require("./controller/tag");
 const answerController = require("./controller/answer");
 const userController = require("./controller/user");
+const profileController = require("./controller/profile");
 const voteController = require("./controller/vote");
 const commentController = require("./controller/comment");
 
@@ -56,6 +57,7 @@ app.use("/question", questionController);
 app.use("/tag", tagController);
 app.use("/answer", answerController);
 app.use("/user", userController);
+app.use("/profile", profileController);
 app.use("/vote", voteController);
 app.use("/comment", commentController);
 

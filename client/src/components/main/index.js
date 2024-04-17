@@ -8,8 +8,10 @@ import NewQuestion from "./newQuestion";
 import NewAnswer from "./newAnswer";
 import Login from "./login";
 import Register from './register';
+import EditProfile from "./editProfile";
 
 import {checkLoginStatus} from "../../services/userService";
+import Profile from "./profile";
 
 const Main = ({
                 search = "",
@@ -25,6 +27,7 @@ const Main = ({
   const [page, setPage] = useState("home");
   const [questionOrder, setQuestionOrder] = useState("newest");
   const [qid, setQid] = useState("");
+  const [viewUser, setViewUser] = useState("");
   const [redirect, setRedirect] = useState("home");
   let selected = "";
   let content = null;
@@ -75,6 +78,15 @@ const Main = ({
     updateAppStatus("logged_in");
   }
 
+  const handleProfile = (uid) => {
+    setViewUser(uid);
+    setPage("profile");
+  }
+
+  const handleEditProfile = () => {
+    setPage("editProfile");
+  }
+
   const getQuestionPage = (order = "newest", search = "") => {
     return (
       <QuestionPage
@@ -85,6 +97,7 @@ const Main = ({
         clickTag={clickTag}
         handleAnswer={handleAnswer}
         handleNewQuestion={handleNewQuestion}
+        handleProfile={handleProfile}
       />
     );
   };
@@ -99,9 +112,16 @@ const Main = ({
     }
     case "viewing_self_profile": {
       if (page !== "profile") {
-        setPage("profile");
+        handleProfile(user);
       }
       updateAppStatus("logged_in");
+      break;
+    }
+    case "logging_out": {
+      if (page !== "home") {
+        handleQuestions();
+      }
+      updateAppStatus("logged_out");
       break;
     }
     default: {
@@ -178,6 +198,27 @@ const Main = ({
           updateUser={updateUser}
           csrfToken={csrfToken}
           setCsrfToken={setCsrfToken}
+        />
+      );
+      break;
+    }
+    case "profile": {
+      selected = "";
+      content = (
+        <Profile
+          profileUser={viewUser}
+          handleAnswer={handleAnswer}
+          handleEditProfile={handleEditProfile}
+        />
+      );
+      break;
+    }
+    case "editProfile": {
+      selected = "";
+      content = (
+        <EditProfile
+          profileUser={viewUser}
+          handleProfile={handleProfile}
         />
       );
       break;

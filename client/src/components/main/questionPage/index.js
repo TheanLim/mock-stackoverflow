@@ -2,25 +2,25 @@ import "./index.css";
 import QuestionHeader from "./header";
 import Question from "./question";
 
-import { getQuestionsByFilter } from "../../../services/questionService";
-import { useEffect, useState } from "react";
+import {getQuestionsByFilter} from "../../../services/questionService";
+import {useEffect, useState} from "react";
 
 const QuestionPage = ({
-    title_text = "All Questions",
-    order,
-    search,
-    setQuestionOrder,
-    clickTag,
-    handleAnswer,
-    handleNewQuestion,
-}) => {
-    const [qlist, setQlist] = useState([]);
-    useEffect(() => {
-        const fetchData = async () => {
-            let res = await getQuestionsByFilter(order, search);
-            setQlist(res || []);
-        };
-
+                        title_text = "All Questions",
+                        order,
+                        search,
+                        setQuestionOrder,
+                        clickTag,
+                        handleAnswer,
+                        handleNewQuestion,
+                        handleProfile,
+                      }) => {
+  const [qlist, setQlist] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      let res = await getQuestionsByFilter(order, search);
+      setQlist(res || []);
+    };
         fetchData().catch((e) => console.log(e));
     }, [order, search]);
     return (
@@ -38,6 +38,7 @@ const QuestionPage = ({
                         key={q._id}
                         clickTag={clickTag}
                         handleAnswer={handleAnswer}
+                        handleProfile={handleProfile}
                     />
                 ))}
             </div>

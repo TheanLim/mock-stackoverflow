@@ -22,6 +22,11 @@ const validateCSRF = async (req, res) => {
 };
 
 const logout = async (req, res) => {
+  if (req.session && req.session.user) {
+    await User.findByIdAndUpdate(req.session.user, {
+      time_last_seen: Date.now()
+    })
+  }
   req.session.destroy(function(err) {
     if(err) {
       res.status(500).json({error: err});
@@ -61,6 +66,10 @@ const signUp = async (req, res) => {
     let user = await User.findOne({email: req.body.email});
     if (user) {
       return res.status(403).json({error: 'Email already exists'});
+    }
+    user = await User.findOne({display_name: req.body.display_name});
+    if (user) {
+      return res.status(403).json({error: 'Display Name already exists'});
     }
     const hashedPassword = await bcrypt.hash(req.body.password, SALT_ROUNDS);
     const newUser = await User.create({

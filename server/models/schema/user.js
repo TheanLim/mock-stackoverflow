@@ -9,7 +9,7 @@ module.exports = mongoose.Schema(
     last_name: {type: String, required: true},
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
-    display_name: {type: String, required: true},
+    display_name: {type: String, required: true, unique: true},
     about_summary: {type: String, default: ""},
     date_joined: {type: Date, required: true},
     time_last_seen: {type: Date, required: true},

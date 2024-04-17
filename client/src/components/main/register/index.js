@@ -86,7 +86,9 @@ const Register = ({ handleRedirect, handleLogin, updateUser, csrfToken, setCsrfT
 
     if (res.error === 'Email already exists') {
       setEmailError(res.error);
-    } else {
+    } else if (res.error === 'Display Name already exists') {
+      setUsernameError(res.error);
+    }else {
       updateUser(res)
       handleRedirect();
     }
