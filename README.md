@@ -1,3 +1,4 @@
+[![Continuous Integration](https://github.com/CSE-316-Software-Development/final-project-marko-thean/actions/workflows/ci.yml/badge.svg)](https://github.com/CSE-316-Software-Development/final-project-marko-thean/actions/workflows/ci.yml)
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/37vDen4S)
 # Final Team Project for CS5500
 

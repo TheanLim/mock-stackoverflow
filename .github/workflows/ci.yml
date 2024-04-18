@@ -1,0 +1,118 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+  push:
+    
+jobs:
+  install_dependencies_setup:
+    name: Install client and server dependencies, and setup
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Check if Node.js is installed
+        run: node --version || echo 'Node.js is not installed'
+        id: check_node_installed
+        continue-on-error: true
+  
+      - name: Install Node.js and npm
+        if: steps.check_node_installed.outcome == 'failure'
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+      
+      - name: Install client dependencies
+        run: npm install
+        working-directory: client/
+
+      - name: Install server dependencies
+        run: npm install
+        working-directory: server/
+
+      - name: Set DB_URL variable
+        run: echo "DB_URL=mongodb://127.0.0.1:27017/fake_so" >> $GITHUB_ENV
+  
+      - name: Run destroy.js
+        env:
+          DB_URL: ${{ env.DB_URL }}
+        run: node destroy.js $DB_URL
+        working-directory: server/
+  
+  lint_check:
+    name: Run Eslinter
+    runs-on: self-hosted
+    needs: install_dependencies_setup
+    steps:
+      - name: Run Eslinter on Server codes
+        run: npx eslint server/ --ignore-pattern "server/tests"
+
+      - name: Run Eslinter on Client codes
+        if: always()
+        run: npx eslint client/src/
+
+  client_tests:
+    name: Run Client tests
+    runs-on: self-hosted
+    needs: install_dependencies_setup
+    steps:
+      - name: Run Component tests
+        run: npx cypress run --component
+        working-directory: client/
+
+      - name: Upload Cypress Component Report
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: component-test-report
+          path: client/cypress/reports/html
+
+  server_tests_with_coverage:
+    name: Run Server tests with coverage
+    runs-on: self-hosted
+    needs: install_dependencies_setup
+    steps:
+      - name: Run Server tests
+        run: npm run test:coverage
+        working-directory: server/
+
+      - name: Upload Server Test Report
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: server-test-report
+          path: server/reports
+
+      - name: Upload Server Test Coverage Report
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: server-test-coverage-report
+          path: server/coverage/lcov-report
+  
+  e2e_tests:
+    name: Run End-to-End tests
+    runs-on: self-hosted
+    needs: 
+      - client_tests
+      - server_tests_with_coverage
+    steps:
+      - name: Start client application
+        run: npm start &
+        working-directory: client/
+
+      - name: Start server
+        run: node server.js &
+        working-directory: server/
+
+      - name: Run End-to-End tests
+        run: npx cypress run
+        working-directory: client/
+      
+      - name: Upload Cypress End-to-End Report
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: e2e-test-report
+          path: client/cypress/reports/html

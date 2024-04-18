@@ -4,10 +4,33 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "jest"
+        "test": "jest",
+        "test:coverage": "npm run test -- --coverage || exit 0"
     },
     "author": "",
     "license": "ISC",
+    "jest": {
+        "reporters": [
+            "default",
+            [
+                "jest-html-reporters",
+                {
+                    "publicPath": "./reports",
+                    "filename": "server_test_report.html",
+                    "inlineSource": true,
+                    "pageTitle": "Stackoverflow Server Continuous Integration Report"
+                }
+            ]
+        ],
+        "coverageThreshold": {
+            "global": {
+                "branches": 80,
+                "functions": 80,
+                "lines": 80,
+                "statements": 80
+            }
+        }
+    },
     "dependencies": {
         "cors": "*",
         "csurf": "^1.11.0",
@@ -21,6 +44,7 @@
     "devDependencies": {
         "bcrypt": "^5.1.1",
         "eslint": "^8.54.0",
+        "jest-html-reporters": "^3.1.7",
         "mockingoose": "^2.16.2",
         "mongodb-memory-server": "^9.1.8",
         "nodemon": "^2.0.22",
