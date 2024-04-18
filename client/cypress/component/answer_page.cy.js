@@ -1,6 +1,5 @@
 import AnswerHeader from '../../src/components/main/answerPage/header';
-import QuestionBody from '../../src/components/main/answerPage/questionBody'
-import Answer from '../../src/components/main/answerPage/answer';
+import Post from '../../src/components/main/answerPage/post';
 import AnswerPage from '../../src/components/main/answerPage'
 
 // Answer Page - Header Tests
@@ -25,17 +24,18 @@ it('Component should have a question body which shows question text, views, aske
     const views = '150';
     const askedBy = {display_name: 'vanshitatilwani'};
     const date = new Date().toLocaleString();
-    cy.mount(<QuestionBody 
-        text={questionBody}
-        views={views} 
-        askby={askedBy}
-        meta={date}
-        />);
+    cy.mount(<Post 
+              postType={'question'}
+              text={questionBody}
+              views={views} 
+              postBy={askedBy}
+              meta={date}
+          />)
     
-    cy.get('.answer_question_text > div').contains(questionBody)
-    cy.get('.answer_question_view').contains(views + ' views')
-    cy.get('.answer_question_right > .question_author').contains(askedBy.display_name);
-    cy.get('.answer_question_right > .answer_question_meta').contains('asked ' + date)
+    cy.get('#postText > div').contains(questionBody)
+    cy.get('.post_view').contains(views + ' views')
+    cy.get('.post_author').contains(askedBy.display_name);
+    cy.get('.post_question_meta').contains('asked ' + date)
     
 })
 
@@ -44,15 +44,15 @@ it('Component should have a answer text ,answered by and answered date', () => {
     const answerText = 'Sample Answer Text'
     const answeredBy = {display_name: 'mkrstulovic'}
     const date = new Date().toLocaleString()
-    cy.mount(<Answer 
-        text={answerText}
-        ansBy={answeredBy}
-        meta={date}
-        />)
+    cy.mount(<Post 
+              text={answerText}
+              postBy={answeredBy}
+              meta={date}
+    />)
     
-    cy.get('.answerText').contains(answerText)
-    cy.get('.answerAuthor > .answer_author').contains(answeredBy.display_name)
-    cy.get('.answerAuthor > .answer_question_meta').contains(date)
+    cy.get('#postText > div').contains(answerText)
+    cy.get('.post_author').contains(answeredBy.display_name)
+    cy.get('.post_question_meta').contains(date)
     
     
 })
@@ -69,6 +69,7 @@ it('Render a Answer Page Component and verify all details', () => {
         asked_by: {display_name: 'John Doe'},
         ask_date_time: '2023-04-03T12:00:00Z',
         views: 10,
+        status: 'open',
         answers: [
           {
             text: 'You can use Jest as a test runner and Enzyme for rendering and traversing React components.',
@@ -97,22 +98,22 @@ it('Render a Answer Page Component and verify all details', () => {
     cy.get('#answersHeader > .bluebtn').click()
     cy.get('@handleNewQuestionSpy').should('have.been.called');
 
-    cy.get('.answer_question_text > div').contains(question.text)
-    cy.get('.answer_question_view').contains(question.views + ' views')
-    cy.get('.answer_question_right > .question_author').contains(question.asked_by.display_name)
+    cy.get('.post > div').contains(question.text)
+    cy.get('.post_view').contains(question.views + ' views')
+    cy.get('.post_author').contains(question.asked_by.display_name)
     
-    cy.get('.answerText')
-    .eq(0)
+    cy.get('.post > #postText')
+    .eq(1)
     .find('div')
     .should('have.text', question.answers[0].text);
-    cy.get('.answerAuthor > .answer_author').eq(0).should('have.text',
+    cy.get('.post_author').eq(1).should('have.text',
       question.answers[0].ans_by.display_name)
 
-    cy.get('.answerText')
-    .eq(1) 
+    cy.get('.post > #postText')
+    .eq(2)
     .find('div')
-    .should('have.text', question.answers[1].text);
-    cy.get('.answerAuthor > .answer_author').eq(0).should('have.text',
+    .should('have.text', question.answers[0].text);
+    cy.get('.post_author').eq(2).should('have.text',
       question.answers[0].ans_by.display_name)
 
     cy.get('.ansButton').click();

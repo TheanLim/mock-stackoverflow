@@ -15,8 +15,10 @@ describe('New Answer Page 1', () => {
         cy.contains('Answer Question').click();
         cy.get('#answerTextInput').type(answers[0]);
         cy.contains('Post Answer').click();
-        cy.get('.answerText').each(($el, index) => {
-            cy.wrap($el).should('contain', answers[index]);
+        cy.get('.postText').each(($el, index) => {
+            if (index > 0) { // first element is the question
+                cy.wrap($el).should('contain', answers[index-1]);
+            }
         });
         cy.contains('mkrstulovic');
         cy.contains('0 seconds ago');
@@ -90,8 +92,10 @@ describe('New Answer Page 6', () => {
         cy.get('.form_postBtn').click();
         cy.get('#answerTextInput').type(answers[0]);
         cy.contains('Post Answer').click();
-        cy.get('.answerText').each(($el, index) => {
-            cy.wrap($el).should('contain', answers[index]);
+        cy.get('.postText').each(($el, index) => {
+            if (index > 0){ // the first element is the question
+                cy.wrap($el).should('contain', answers[index-1]);
+            }
         });
         cy.contains('mkrstulovic');
         cy.contains('0 seconds ago');

@@ -1,3 +1,4 @@
+/* global process */
 // Application server
 
 const express = require("express");

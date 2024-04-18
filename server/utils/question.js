@@ -1,10 +1,6 @@
 const Tag = require("../models/tags");
 const Question = require("../models/questions");
 const Answer = require("../models/answers");
-const Comment = require("../models/comments");
-const Vote = require("../models/votes");
-const User = require("../models/users");
-
 
 function getQuestions() {
   return Question.find()

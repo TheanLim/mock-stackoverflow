@@ -25,6 +25,10 @@
     font-weight: bold;
 }
 
+.post_view {
+    width: 15%;
+}
+
 .post {
     display: flex;
     flex-direction: row;

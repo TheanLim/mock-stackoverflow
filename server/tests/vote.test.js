@@ -406,6 +406,12 @@ describe("GET /isAuthorizedToVote/:voteType", () => {
       timekeeper.freeze(new Date());
     })
 
+    afterEach(async () => {
+      server.close();
+      await mongoose.disconnect()
+      timekeeper.reset();
+    });
+
     const setupSession = async(userRep=1, errorFindById = null) => {
       // Set up for login
       const mockReqBody = {
@@ -438,12 +444,6 @@ describe("GET /isAuthorizedToVote/:voteType", () => {
       await authSession.post('/user/login').send(mockReqBody)
       return authSession;
     }
-    
-    afterEach(async () => {
-      server.close();
-      await mongoose.disconnect()
-      timekeeper.reset();
-    });
 
     it("should return 200 if user is authorized to vote", async () => {
       const voteTypes = ['upvote', 'downvote', 'flag', 'close', 'reopen']

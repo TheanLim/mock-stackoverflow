@@ -55,7 +55,8 @@ const getQuestionById = async (req, res) => {
 
     res.json(question.toJSON({virtuals:true}));
   } catch (err) {
-    res.status(500).json({error: "Failed to find questions."});
+    console.error(err)
+    res.status(500).json({error: "Failed to find question."});
   }
 };
 

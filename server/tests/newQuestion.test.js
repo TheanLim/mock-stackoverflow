@@ -170,13 +170,18 @@ describe('GET /getQuestionById/:qid', () => {
       solution: mockQuestions.filter(q => q._id == mockReqParams.qid)[0]['solution'],
     };
 
+    const question = {};
+    question.toJSON  = jest.fn().mockReturnValue(mockPopulatedQuestion);
+
     // Provide mock question data
     Question.findOneAndUpdate = jest.fn().mockReturnValue({
       populate: jest.fn().mockReturnValueOnce({
         populate: jest.fn().mockReturnValueOnce({
           populate: jest.fn().mockReturnValueOnce({
             populate: jest.fn().mockReturnValueOnce({
-              populate: jest.fn().mockResolvedValueOnce(mockPopulatedQuestion)
+              populate: jest.fn().mockReturnValueOnce({
+                populate: jest.fn().mockResolvedValueOnce(question)
+              })
             })
           })
         })

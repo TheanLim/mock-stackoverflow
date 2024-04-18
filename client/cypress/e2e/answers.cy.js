@@ -21,11 +21,11 @@ describe('Answer Page 2', () => {
         const text = 'the alert shows the proper index for the li clicked, and when I alert the variable within the last function Im calling, moveToNextImage(stepClicked), the same value shows but the animation isnt happening. This works many other ways, but Im trying to pass the index value of the list item clicked to use for the math to calculate.'
         cy.visit('http://localhost:3000');
         cy.contains('Programmatically navigate using React router').click();
-        cy.get('#questionBody').should('contain', '11 views');
-        cy.get('#questionBody').should('contain', text);
-        cy.get('#questionBody').should('contain', 'mkrstulovic');
-        cy.get('#questionBody').should('contain', 'Jan 20, 2022');
-        cy.get('#questionBody').should('contain', '03:00');
+        cy.get('.post_comment_main').should('contain', '11 views');
+        cy.get('.post_comment_main').should('contain', text);
+        cy.get('.post_comment_main').should('contain', 'mkrstulovic');
+        cy.get('.post_comment_main').should('contain', 'Jan 20, 2022');
+        cy.get('.post_comment_main').should('contain', '03:00');
     })
 })
 
@@ -34,8 +34,10 @@ describe('Answer Page 3', () => {
         const answers = ["React Router is mostly a wrapper around the history library. history handles interaction with the browser's window.history for you with its browser and hash histories. It also provides a memory history which is useful for environments that don't have a global history. This is particularly useful in mobile app development (react-native) and unit testing with Node.", "On my end, I like to have a single history object that I can carry even outside components. I like to have a single history.js file that I import on demand, and just manipulate it. You just have to change BrowserRouter to Router, and specify the history prop. This doesn't change anything for you, except that you have your own history object that you can manipulate as you want. You need to install history, the library used by react-router."];
         cy.visit('http://localhost:3000');
         cy.contains('Programmatically navigate using React router').click();
-        cy.get('.answerText').each(($el, index) => {
-            cy.wrap($el).should('contain', answers[index]);
+        cy.get('.post_comment_main').each(($el, index) => { // first element is the question
+            if (index > 0) {
+                cy.wrap($el).should('contain', answers[index - 1]);
+            }
         });
     });
 });
@@ -47,10 +49,12 @@ describe('Answer Page 4', () => {
         const times = ['03:24','08:24'];
         cy.visit('http://localhost:3000');
         cy.contains('Programmatically navigate using React router').click();
-        cy.get('.answerAuthor').each(($el, index) => {
-            cy.wrap($el).should('contain', authors[index]);
-            cy.wrap($el).should('contain', date[index]);
-            cy.wrap($el).should('contain', times[index]);
+        cy.get('.postAuthor').each(($el, index) => {
+            if (index > 0) { // first element is the question
+                cy.wrap($el).should('contain', authors[index-1]);
+                cy.wrap($el).should('contain', date[index-1]);
+                cy.wrap($el).should('contain', times[index-1]);
+            }
         });
     });
 });

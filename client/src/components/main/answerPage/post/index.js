@@ -13,7 +13,7 @@ const voteTypeCnt = (votes, voteType) => {
 
 // Component for the Answer Page
 // A post could be a Question or an Answer Post
-const Post = ({ postType, pid, text, postBy, meta, comments, score, votes, status, user, isSolution, parentPostBy, handleVote, handleLogin, handleAddComment, handleMarkSolution }) => {
+const Post = ({ postType, pid, views, text, postBy, meta, comments, score, votes, status, user, isSolution, parentPostBy, handleVote, handleLogin, handleAddComment, handleMarkSolution }) => {
     const [isAuthorizedToFlag, setIsAuthorizedToFlag] = useState(false);
     const [isAuthorizedToCloseReopen, setIsAuthorizedToCloseReopen] = useState(false);
 
@@ -51,13 +51,14 @@ const Post = ({ postType, pid, text, postBy, meta, comments, score, votes, statu
                 <SolutionButton postType={postType} userId={userId} parentPostBy={parentPostBy} pid={pid} isSolution={isSolution} handleMarkSolution={handleMarkSolution} />
             </div>
             <div className="post_comment_main">
+                {views && <div className="bold_title post_view">{views} views</div>}
                 <div className="post">
                     <div id="postText" className="postText">
                         {handleHyperlink(text)}
                     </div>
                     <div className="postAuthor">
                         <div className="post_author">{postBy && postBy.display_name}</div>
-                        <div className="post_question_meta">{meta}</div>
+                        <div className="post_question_meta">{postType==="question"?'asked':''} {meta}</div>
                     </div>
                 </div>
                 <div className='flag_close_reopen_container'>

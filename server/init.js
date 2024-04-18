@@ -103,7 +103,7 @@ const init = async () => {
   let t4 = await tagCreate('shared-preferences');
   let t5 = await tagCreate('storage');
   let t6 = await tagCreate('website');
-  let t7 = await tagCreate('flutter');
+  await tagCreate('flutter');
   let u1 = await userCreate(
     "test1@gmail.com", "Marko", "Krstulovic",
     "mkrstulovic", fakePassword, "I AM A CODER. I LOVE CODE.",
@@ -181,13 +181,13 @@ const init = async () => {
   );
   // End adding flaggers
 
-  let v1 = await voteCreate(
+  await voteCreate(
     u1, "close", "Bad Question"
   );
-  let v1b = await voteCreate(
+  await voteCreate(
     u1, "close", "No content"
   );
-  let v1c = await voteCreate(
+  await voteCreate(
     u1, "close", "Impossible to answer"
   );
   let v2 = await voteCreate(
