@@ -133,17 +133,17 @@ const init = async () => {
   // Added more 'CloseReopenErs' to test Close/Reopen a post
   await userCreate(
     "c1@gmail.com", "CloseReopenErs", "CloseReopenErs",
-    "CloseReopenErs", fakePassword, "",
+    "CloseReopenErs1", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 3000
   );
   await userCreate(
     "c2@gmail.com", "CloseReopenErs", "CloseReopenErs",
-    "CloseReopenErs", fakePassword, "",
+    "CloseReopenErs2", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 3000
   );
   await userCreate(
     "c3@gmail.com", "CloseReopenErs", "CloseReopenErs",
-    "CloseReopenErs", fakePassword, "",
+    "CloseReopenErs3", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 3000
   );
   //
@@ -156,27 +156,27 @@ const init = async () => {
   );
   await userCreate(
     "f2@gmail.com", "Flagger", "Flagger",
-    "Flagger", fakePassword, "",
+    "Flagger1", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
   );
   await userCreate(
     "f3@gmail.com", "Flagger", "Flagger",
-    "Flagger", fakePassword, "",
+    "Flagger2", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
   );
   await userCreate(
     "f4@gmail.com", "Flagger", "Flagger",
-    "Flagger", fakePassword, "",
+    "Flagger3", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
   );
   await userCreate(
     "f5@gmail.com", "Flagger", "Flagger",
-    "Flagger", fakePassword, "",
+    "Flagger4", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
   );
   await userCreate(
     "f6@gmail.com", "Flagger", "Flagger",
-    "Flagger", fakePassword, "",
+    "Flagger5", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
   );
   // End adding flaggers

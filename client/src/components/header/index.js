@@ -1,6 +1,7 @@
 import "./index.css";
 import { useState } from "react";
 import { logOutUser } from "../../services/userService";
+import ActionButton from "../main/baseComponents/button";
 
 const Header = ({search, setQuestionPage, updateAppStatus, loggedIn, updateUser, csrfToken, setCsrfToken}) => {
   const [val, setVal] = useState(search);
@@ -14,36 +15,27 @@ const Header = ({search, setQuestionPage, updateAppStatus, loggedIn, updateUser,
 
   const renderLoginBtn = () => {
     return (
-      <button
-        className="bluebtn"
-        onClick={() => {
-          updateAppStatus("started_login");
-        }}
-      >
-        Sign In
-      </button>
+      <ActionButton
+        styling="bluebtn"
+        clickMethod={() => updateAppStatus("started_login")}
+        buttonText="Sign In"
+      />
     );
   }
 
   const renderLoggedInBtns = () => {
     return (
       <div className="btn-container">
-        <button
-          className="bluebtn"
-          onClick={() => {
-            updateAppStatus("viewing_self_profile");
-          }}
-        >
-          Profile
-        </button>
-        <button
-          className="bluebtn"
-          onClick={() => {
-            signOutUser();
-          }}
-        >
-          Sign Out
-        </button>
+        <ActionButton
+          styling="bluebtn"
+          clickMethod={() => updateAppStatus("viewing_self_profile")}
+          buttonText="Profile"
+        />
+        <ActionButton
+          styling="bluebtn"
+          clickMethod={signOutUser}
+          buttonText="Sign Out"
+        />
       </div>
     );
   }
