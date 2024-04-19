@@ -27,7 +27,7 @@ const getQuestionById = async (qid, incrementView = true) => {
 const addQuestion = async (q) => {
     const res = await api.post(`${QUESTION_API_URL}/addQuestion`, q);
 
-    return res.data;
+    return res.data || res.response.data;
 };
 
 export { getQuestionsByFilter, getQuestionById, addQuestion };

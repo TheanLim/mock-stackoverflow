@@ -7,12 +7,15 @@ function getQuestions() {
     .populate('tags answers comments votes solution asked_by');
 }
 
-const addTag = async (tname) => {
+const addTag = async (tname, reputation) => {
   const tagName = tname.toLowerCase();
   let tag = await Tag.findOne({name: tagName});
   if (tag) {
     return tag._id;
   } else {
+    if (reputation < 1500) {
+      return null;
+    }
     let newTag = Tag({name: tagName});
     let newTagSaved = await newTag.save();
     return newTagSaved._id;

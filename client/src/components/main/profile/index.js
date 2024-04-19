@@ -3,6 +3,7 @@ import "./index.css";
 
 import {viewUserProfile} from "../../../services/profileService";
 import {getMetaData} from "../../../tool";
+import ActionButton from "../baseComponents/button";
 
 const Profile = ({profileUser, handleAnswer, handleEditProfile}) => {
   const [profileInfo, setProfileInfo] = useState({});
@@ -71,11 +72,11 @@ const Profile = ({profileUser, handleAnswer, handleEditProfile}) => {
       }
       {ownership &&
         <div className="btn-container">
-          <button className="bluebtn"
-                  onClick={handleEditProfile}
-          >
-            Edit Profile
-          </button>
+          <ActionButton
+            styling="bluebtn"
+            buttonText="Edit Profile"
+            clickMethod={handleEditProfile}
+          />
         </div>
       }
 

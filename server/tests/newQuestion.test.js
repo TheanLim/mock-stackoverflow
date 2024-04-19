@@ -21,12 +21,14 @@ let server;
 
 const user1 = {
   _id: '65e9b58910afe6e94dsfjkhc',
-  display_name: 'marko'
+  display_name: 'marko',
+  reputation: 100
 }
 
 const user2 = {
   _id: '65e9b58910adsfsdhfc6e6dc',
-  display_name: 'thean'
+  display_name: 'thean',
+  reputation: 2000
 }
 
 const tag1 = {
@@ -210,18 +212,18 @@ describe('POST /addQuestion', () => {
   it('should add a new question', async () => {
     // Mock request body
 
-    const mockTags = [tag1, tag2];
+    const mockTags = tag1;
 
     const mockQuestion = {
       _id: '65e9b58910afe6e94fc6e6fe',
       title: 'Question 3 Title',
       text: 'Question 3 Text',
-      tags: [tag1, tag2],
+      tags: [tag1],
       answers: [ans1],
     }
 
-    User.findOne = jest.fn().mockImplementation(() => jest.fn().mockResolvedValueOnce(user1));
-    addTag.mockResolvedValueOnce(mockTags);
+    User.findOne = jest.fn().mockImplementation(() => jest.fn().mockResolvedValueOnce(user2));
+    addTag.mockResolvedValue(mockTags);
     Question.create.mockResolvedValueOnce(mockQuestion);
 
     // Making the request
@@ -232,6 +234,33 @@ describe('POST /addQuestion', () => {
     // Asserting the response
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockQuestion);
+
+  });
+
+  it('should throw an error if user lacks reputation to make new tags', async () => {
+    // Mock request body
+
+    const mockTags = null;
+
+    const mockQuestion = {
+      _id: '65e9b58910afe6e94fc6e6fe',
+      title: 'Question 3 Title',
+      text: 'Question 3 Text',
+      tags: [tag1, tag2],
+      answers: [ans1],
+    }
+
+    User.findOne = jest.fn().mockImplementation(() => jest.fn().mockResolvedValueOnce(user1));
+    addTag.mockResolvedValue(mockTags);
+
+    // Making the request
+    const response = await supertest(server)
+      .post('/question/addQuestion')
+      .send(mockQuestion);
+
+    // Asserting the response
+    expect(response.status).toBe(403);
+    expect(response.body).toEqual({error: "Not enough reputation to create new tags."});
 
   });
 });

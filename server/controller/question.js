@@ -55,7 +55,6 @@ const getQuestionById = async (req, res) => {
 
     res.json(question.toJSON({virtuals:true}));
   } catch (err) {
-    console.error(err)
     res.status(500).json({error: "Failed to find question."});
   }
 };
@@ -65,12 +64,23 @@ const addQuestion = async (req, res) => {
   try {
     let requestBody = req.body;
     requestBody.asked_by = await User.findById(req.session.user);
-    requestBody.tags = await Promise.all(requestBody.tags.map(tname => addTag(tname)));
+    const reputation = requestBody.asked_by.reputation;
+    requestBody.tags = await Promise.all(requestBody.tags.map(tname => addTag(tname, reputation)));
 
-    const createdQuestion = await Question.create(requestBody);
-    res.json(createdQuestion);
+    let newTagsNoRep = false;
+    requestBody.tags.map(tag => {
+      if (!tag) {
+        newTagsNoRep = true;
+      }
+    });
+    if (newTagsNoRep) {
+      res.status(403).json({error: "Not enough reputation to create new tags."})
+    } else {
+      const createdQuestion = await Question.create(requestBody);
+      res.json(createdQuestion);
+    }
   } catch (err) {
-    res.status(500).json({});
+    res.status(500).json({error: "Failed to create question."});
   }
 };
 

@@ -5,6 +5,7 @@ import Textarea from "../baseComponents/textarea";
 import "./index.css";
 
 import { viewUserProfile, updateProfile } from "../../../services/profileService";
+import ActionButton from "../baseComponents/button";
 
 const EditProfile = ({ profileUser, handleProfile }) => {
   const [displayName, setDisplayName] = useState("");
@@ -139,12 +140,11 @@ const EditProfile = ({ profileUser, handleProfile }) => {
         err={lNameErr}
       />
       <div className="btn_indicator_container">
-        <button
-          className="form_postBtn"
-          onClick={editProfile}
-        >
-          Update Profile
-        </button>
+        <ActionButton
+          styling="form_postBtn"
+          buttonText="Update Profile"
+          clickMethod={editProfile}
+        />
       </div>
     </Form>
   );

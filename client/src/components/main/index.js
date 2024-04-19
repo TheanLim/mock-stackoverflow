@@ -102,132 +102,139 @@ const Main = ({
     );
   };
 
-  switch (appStatus) {
-    case "started_login": {
-      if (page !== "login") {
-        setPage("login");
+  const loadAppStatus = () => {
+    switch (appStatus) {
+      case "started_login": {
+        if (page !== "login") {
+          setPage("login");
+        }
+        updateAppStatus("logged_out");
+        break;
       }
-      updateAppStatus("logged_out");
-      break;
-    }
-    case "viewing_self_profile": {
-      if (page !== "profile") {
-        handleProfile(user);
+      case "viewing_self_profile": {
+        if (page !== "profile") {
+          handleProfile(user);
+        }
+        updateAppStatus("logged_in");
+        break;
       }
-      updateAppStatus("logged_in");
-      break;
-    }
-    case "logging_out": {
-      if (page !== "home") {
-        handleQuestions();
+      case "logging_out": {
+        if (page !== "home") {
+          handleQuestions();
+        }
+        updateAppStatus("logged_out");
+        break;
       }
-      updateAppStatus("logged_out");
-      break;
-    }
-    default: {
-      break;
+      default: {
+        break;
+      }
     }
   }
 
-  switch (page) {
-    case "home": {
-      selected = "q";
-      content = getQuestionPage(questionOrder.toLowerCase(), search);
-      break;
-    }
-    case "tag": {
-      selected = "t";
-      content = (
-        <TagPage
-          clickTag={clickTag}
-          handleNewQuestion={handleNewQuestion}
-        />
-      );
-      break;
-    }
-    case "answer": {
-      selected = "";
-      content = (
-        <AnswerPage
-          qid={qid}
-          handleNewQuestion={handleNewQuestion}
-          handleNewAnswer={handleNewAnswer}
-          user={user}
-          handleLogin={handleLogin}
-        />
-      );
-      break;
-    }
-    case "newQuestion": {
-      if (user) {
-        selected = "";
-        content = <NewQuestion handleQuestions={handleQuestions}/>;
-      } else {
-        handleLogin();
+  const loadPageContent = () => {
+    switch (page) {
+      case "home": {
+        selected = "q";
+        content = getQuestionPage(questionOrder.toLowerCase(), search);
+        break;
       }
-      break;
-    }
-    case "newAnswer": {
-      if (user) {
-        selected = "";
-        content = <NewAnswer qid={qid} handleAnswer={handleAnswer}/>;
-      } else {
-        handleLogin();
+      case "tag": {
+        selected = "t";
+        content = (
+          <TagPage
+            clickTag={clickTag}
+            handleNewQuestion={handleNewQuestion}
+          />
+        );
+        break;
       }
-      break;
+      case "answer": {
+        selected = "";
+        content = (
+          <AnswerPage
+            qid={qid}
+            handleNewQuestion={handleNewQuestion}
+            handleNewAnswer={handleNewAnswer}
+            user={user}
+            handleLogin={handleLogin}
+          />
+        );
+        break;
+      }
+      case "newQuestion": {
+        if (user) {
+          selected = "";
+          content = <NewQuestion handleQuestions={handleQuestions}/>;
+        } else {
+          handleLogin();
+        }
+        break;
+      }
+      case "newAnswer": {
+        if (user) {
+          selected = "";
+          content = <NewAnswer qid={qid} handleAnswer={handleAnswer}/>;
+        } else {
+          handleLogin();
+        }
+        break;
+      }
+      case "login": {
+        selected = "";
+        content = (
+          <Login
+            handleRedirect={handleRedirect}
+            handleRegister={handleRegister}
+            updateUser={updateUser}
+            csrfToken={csrfToken}
+            setCsrfToken={setCsrfToken}
+          />
+        );
+        break;
+      }
+      case "register": {
+        selected = "";
+        content = (
+          <Register
+            handleRedirect={handleRedirect}
+            handleLogin={handleLogin}
+            updateUser={updateUser}
+            csrfToken={csrfToken}
+            setCsrfToken={setCsrfToken}
+          />
+        );
+        break;
+      }
+      case "profile": {
+        selected = "";
+        content = (
+          <Profile
+            profileUser={viewUser}
+            handleAnswer={handleAnswer}
+            handleEditProfile={handleEditProfile}
+          />
+        );
+        break;
+      }
+      case "editProfile": {
+        selected = "";
+        content = (
+          <EditProfile
+            profileUser={viewUser}
+            handleProfile={handleProfile}
+          />
+        );
+        break;
+      }
+      default:
+        selected = "q";
+        content = getQuestionPage();
+        break;
     }
-    case "login": {
-      selected = "";
-      content = (
-        <Login
-          handleRedirect={handleRedirect}
-          handleRegister={handleRegister}
-          updateUser={updateUser}
-          csrfToken={csrfToken}
-          setCsrfToken={setCsrfToken}
-        />
-      );
-      break;
-    }
-    case "register": {
-      selected = "";
-      content = (
-        <Register
-          handleRedirect={handleRedirect}
-          handleLogin={handleLogin}
-          updateUser={updateUser}
-          csrfToken={csrfToken}
-          setCsrfToken={setCsrfToken}
-        />
-      );
-      break;
-    }
-    case "profile": {
-      selected = "";
-      content = (
-        <Profile
-          profileUser={viewUser}
-          handleAnswer={handleAnswer}
-          handleEditProfile={handleEditProfile}
-        />
-      );
-      break;
-    }
-    case "editProfile": {
-      selected = "";
-      content = (
-        <EditProfile
-          profileUser={viewUser}
-          handleProfile={handleProfile}
-        />
-      );
-      break;
-    }
-    default:
-      selected = "q";
-      content = getQuestionPage();
-      break;
   }
+
+  loadAppStatus();
+  loadPageContent();
 
   return (
     <div id="main" className="main">

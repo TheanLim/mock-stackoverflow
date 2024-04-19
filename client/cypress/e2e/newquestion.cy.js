@@ -164,6 +164,21 @@ describe('New Question Form Error Long New Tag', () => {
   })
 });
 
+describe('New Question Form Error Create Tags Error', () => {
+  it('Ask a Question with new tag while not enough rep shows error', () => {
+    cy.visit('http://localhost:3000');
+    cy.contains('Ask a Question').click();
+    cy.get('#formEmailInput').type('test5@gmail.com');
+    cy.get('#formPasswordInput').type('test123');
+    cy.get('.form_postBtn').click();
+    cy.get('#formTitleInput').type('Test Question 1 Title');
+    cy.get('#formTextInput').type('Test Question 1 Text');
+    cy.get('#formTagInput').type('newTag');
+    cy.contains('Post Question').click();
+    cy.contains('Not enough reputation to create new tags.');
+  })
+})
+
 describe('create a new question with a new and an old tag and the question should appear in both through old tag and new tag', () => {
   it('create a new question with a new tag and finds the question through tag', () => {
     cy.visit('http://localhost:3000');

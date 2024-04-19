@@ -8,6 +8,7 @@ import { addVoteToAnswer, addVoteToQuestion, addVoteToComment } from "../../../s
 import { addCommentToAnswer, addCommentToQuestion } from "../../../services/commentService";
 import { markAnswerAsSolution } from "../../../services/answerService";
 import Snackbar from "../baseComponents/snackbar";
+import ActionButton from "../baseComponents/button";
 
 // Component for the Answers page
 const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer, user, handleLogin }) => {
@@ -124,14 +125,11 @@ const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer, user, handleLogin
                         />
                         })}
                     {question.status === 'open' &&
-                        <button
-                            className="bluebtn ansButton"
-                            onClick={() => {
-                                handleNewAnswer();
-                            }}
-                        >
-                            Answer Question
-                        </button>
+                      <ActionButton
+                          styling="bluebtn ansButton"
+                          clickMethod={handleNewAnswer}
+                          buttonText="Answer Question"
+                      />
                     }
                 </>
             }

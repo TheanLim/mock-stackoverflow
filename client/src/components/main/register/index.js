@@ -4,6 +4,7 @@ import Input from "../baseComponents/input";
 import "./index.css";
 
 import { registerNewUser, fetchCSRF, checkLoginStatus } from "../../../services/userService";
+import ActionButton from "../baseComponents/button";
 
 const Register = ({ handleRedirect, handleLogin, updateUser, csrfToken, setCsrfToken }) => {
   const [email, setEmail] = useState("");
@@ -137,27 +138,21 @@ const Register = ({ handleRedirect, handleLogin, updateUser, csrfToken, setCsrfT
         err={lastError}
       />
       <div className="btn_indicator_container">
-        <button
-          className="form_postBtn"
-          onClick={() => {
-            registerUser();
-          }}
-        >
-          Register
-        </button>
+        <ActionButton
+          styling="form_postBtn"
+          buttonText="Register"
+          clickMethod={registerUser}
+        />
         <div className="mandatory_indicator">
           * indicates mandatory fields
         </div>
       </div>
       <div className="register-btns">
-        <button
-          className="bluebtn"
-          onClick={() => {
-            handleLogin();
-          }}
-        >
-          Have an account? Login.
-        </button>
+        <ActionButton
+          styling="bluebtn"
+          buttonText="Have an account? Login."
+          clickMethod={handleLogin}
+        />
       </div>
     </Form>
   );

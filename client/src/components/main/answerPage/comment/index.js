@@ -6,6 +6,7 @@ import { isAuthorizedToVote } from "../../../../services/voteService";
 import Snackbar from "../../baseComponents/snackbar";
 import { IoCaretUp } from "react-icons/io5";
 import { IoFlagSharp } from "react-icons/io5";
+import ActionButton from "../../baseComponents/button";
 
 
 const Comment = (
@@ -94,19 +95,18 @@ const Comment = (
                 </div>
             )}
             {!text && showCommentButton &&
-                <button
-                    className="comment_button"
-                    onClick={async() => {
-                        if (!user) handleLogin();
-                        else {
-                            let res = await Comment.isAuthorizedToComment();
-                            if (res.error) setSnackbarMessage(res.error)
-                            else setShowCommentButton(false);
-                        }
-                    }}
-                >
-                    Add a comment
-                </button>
+              <ActionButton
+                  styling="comment_button"
+                  clickMethod={async() => {
+                      if (!user) handleLogin();
+                      else {
+                          let res = await Comment.isAuthorizedToComment();
+                          if (res.error) setSnackbarMessage(res.error)
+                          else setShowCommentButton(false);
+                      }
+                  }}
+                  buttonText="Add a comment"
+              />
             }
 
             {snackbarMessage && (
