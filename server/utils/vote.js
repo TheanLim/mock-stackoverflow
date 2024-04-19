@@ -119,7 +119,6 @@ const addVote = async (req, res, Model) => {
 
         return res.json(modelItem);
     } catch (err) {
-        console.error(err);
         return res.status(500).json({ error: err.message });
     }
 };

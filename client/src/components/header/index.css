@@ -11,11 +11,3 @@
     font-size: 32px;
     font-weight: 800;
 }
-
-.btn-container {
-    display: flex;
-
-    .bluebtn {
-        margin: auto auto auto 5px;
-    }
-}

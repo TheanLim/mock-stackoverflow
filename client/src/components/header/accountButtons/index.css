@@ -1,0 +1,7 @@
+.btn-container {
+    display: flex;
+
+    .bluebtn {
+        margin: auto auto auto 5px;
+    }
+}
