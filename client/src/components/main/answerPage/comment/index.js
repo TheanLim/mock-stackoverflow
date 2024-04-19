@@ -4,10 +4,9 @@ import { useEffect, useState } from "react";
 import { isAuthorizedToComment } from "../../../../services/commentService";
 import { isAuthorizedToVote } from "../../../../services/voteService";
 import Snackbar from "../../baseComponents/snackbar";
-import { IoCaretUp } from "react-icons/io5";
-import { IoFlagSharp } from "react-icons/io5";
 import ActionButton from "../../baseComponents/button";
-
+import FlagCommentButton from "./flagcommentbutton";
+import UpvoteCommentButton from "./upvotecommentbutton"; 
 
 const Comment = (
     {
@@ -57,9 +56,6 @@ const Comment = (
             if (isUpvoted && isFlagged) break;
         }
     }
-
-    const upvoteClass = (isUpvoted ? 'upvote-black': 'upvote-transparent') + (isUserPostOwner?' no-hover': '')
-    const flagClass = (isFlagged ? 'flag-black': 'flag-transparent') + (isUserPostOwner?' no-hover': '')
     
     return (
         <div className="Comment">
@@ -72,14 +68,10 @@ const Comment = (
                     )}
                     <div className="vote_flag">
                         { isAuthorizedToUpvote &&
-                            <button className="upvote" onClick={() => { handleVote("comment", cid, 'upvote')}} disabled={isUserPostOwner} >
-                                <IoCaretUp className={upvoteClass}/>
-                            </button>
+                            <UpvoteCommentButton cid={cid} handleVote={handleVote} isUpvoted={isUpvoted} isUserPostOwner={isUserPostOwner}/>
                         }
                         { isAuthorizedToFlag &&
-                            <button className="flag" onClick={() => { handleVote("comment", cid, 'flag')}} disabled={isUserPostOwner} >
-                                <IoFlagSharp className={flagClass}/>
-                            </button>
+                            <FlagCommentButton cid={cid} handleVote={handleVote} isFlagged={isFlagged} isUserPostOwner={isUserPostOwner}/>
                         }
                     </div>
                     <div id="comment_text" className="comment_text">

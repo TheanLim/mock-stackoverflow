@@ -1,0 +1,23 @@
+
+.flag{
+    margin-bottom: 5px;
+    border:none;
+    background-color: transparent;
+    margin: auto;
+}
+.flag-transparent{
+    color: #bbbbbb
+}
+.flag-transparent:hover {
+    color: black;
+    cursor: pointer;
+}
+
+.flag-black{
+    color: black;
+    background-color: transparent;
+}
+
+.flag-black:hover {
+    cursor: pointer;
+}
