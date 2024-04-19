@@ -37,7 +37,8 @@ describe('Post', () => {
       handleVote: cy.stub().as('handleVoteStub'),
       handleLogin: cy.stub().as('handleLoginStub'),
       handleAddComment: cy.stub().as('handleAddCommentStub'),
-      handleMarkSolution: cy.stub().as('handleMarkSolutionStub')
+      handleMarkSolution: cy.stub().as('handleMarkSolutionStub'),
+      handleProfile: cy.spy().as('handleProfileSpy')
     };
 
     cy.stub(Post, 'isAuthorizedToVote').as('isAuthorizedToVoteStub').resolves(true);
@@ -66,5 +67,11 @@ describe('Post', () => {
   it('should render the comments', () => {
     cy.mount(<Post {...props} />);
     cy.get('.Comment').should('have.length', props.comments.length + 1);
+  });
+
+  it('should call handle profile when clicking on question owner', () => {
+    cy.mount(<Post {...props} />);
+    cy.get('.postAuthor').click();
+    cy.get('@handleProfileSpy').should('have.been.calledWith', '5678');
   });
 });

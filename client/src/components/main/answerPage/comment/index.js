@@ -14,7 +14,7 @@ const Comment = (
         parentPostType, parentId, 
         cid, text, commentBy, meta, votes, score, 
         handleAddComment, handleVote,
-        user, handleLogin
+        user, handleLogin, handleProfile
     }) => {
     const [showCommentButton, setShowCommentButton] = useState(true)
     const [val, setVal] = useState('')
@@ -84,7 +84,11 @@ const Comment = (
                     </div>
                     <div id="comment_text" className="comment_text">
                         {handleHyperlink(text)}
-                        <div className="comment_details">
+                        <div className="comment_details"
+                             onClick={() => {
+                                 handleProfile(commentBy._id);
+                             }}
+                        >
                             <div className="comment_dash">-</div>
                             <div className="comment_author">
                                 {`${commentBy && commentBy.display_name}`}

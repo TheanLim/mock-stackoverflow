@@ -21,6 +21,7 @@ describe('Comment - if text is NOT provided -> test button click, text area and 
       handleVote: cy.stub(),
       user: null,
       handleLogin: cy.stub().as('handleLoginStub'),
+      handleProfile: cy.spy().as('handleProfileSpy')
     };
 
     // Mock isAuthorizedToVote function; default to true authorized
@@ -115,7 +116,8 @@ describe('Comment - if text is provided, check score, upvote and flag buttons. '
       handleAddComment: cy.stub().as('handleAddCommentStub'),
       handleVote: cy.stub().as('handleVoteStub'),
       user: null,
-      handleLogin: cy.stub()
+      handleLogin: cy.stub(),
+      handleProfile: cy.spy().as('handleProfileSpy')
     };
   });
 
@@ -210,6 +212,18 @@ describe('Comment - if text is provided, check score, upvote and flag buttons. '
     cy.get('#comment_text').should('contain.text', props.text);
     cy.get('.comment_details').should('contain.text', props.commentBy.display_name);
     cy.get('.comment_details').should('contain.text', props.meta);
+  });
+
+  it('should call handleProfile when clicking on comment details', () => {
+    props.text = 'This is a comment';
+
+    cy.mount(<Comment {...props} />);
+
+    cy.get('#comment_text').should('contain.text', props.text);
+    cy.get('.comment_details').should('contain.text', props.commentBy.display_name);
+    cy.get('.comment_details').should('contain.text', props.meta);
+    cy.get('.comment_details').click();
+    cy.get('@handleProfileSpy').should('have.been.calledWith', '9876');
   });
   
 });

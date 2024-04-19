@@ -11,7 +11,7 @@ import Snackbar from "../baseComponents/snackbar";
 import ActionButton from "../baseComponents/button";
 
 // Component for the Answers page
-const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer, user, handleLogin }) => {
+const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer, user, handleLogin, handleProfile }) => {
     const [question, setQuestion] = useState(null);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [answerOrder, setAnswerOrder] = useState('score');
@@ -110,6 +110,7 @@ const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer, user, handleLogin
                         handleLogin={handleLogin}
                         handleAddComment={handleAddComment}
                         handleMarkSolution={handleMarkSolution}
+                        handleProfile={handleProfile}
                     />
 
                     <div className="sort_answers">
@@ -147,6 +148,7 @@ const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer, user, handleLogin
                             handleLogin={handleLogin}
                             handleAddComment={handleAddComment}
                             handleMarkSolution={handleMarkSolution}
+                            handleProfile={handleProfile}
                         />
                         })}
                     {question.status === 'open' &&

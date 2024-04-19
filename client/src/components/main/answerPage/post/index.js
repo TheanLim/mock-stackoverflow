@@ -13,7 +13,9 @@ const voteTypeCnt = (votes, voteType) => {
 
 // Component for the Answer Page
 // A post could be a Question or an Answer Post
-const Post = ({ postType, pid, views, text, postBy, meta, comments, score, votes, status, user, isSolution, parentPostBy, handleVote, handleLogin, handleAddComment, handleMarkSolution }) => {
+const Post = ({ postType, pid, views, text, postBy, meta, comments,
+                  score, votes, status, user, isSolution, parentPostBy,
+                  handleVote, handleLogin, handleAddComment, handleMarkSolution, handleProfile }) => {
     const [isAuthorizedToFlag, setIsAuthorizedToFlag] = useState(false);
     const [isAuthorizedToCloseReopen, setIsAuthorizedToCloseReopen] = useState(false);
 
@@ -56,7 +58,11 @@ const Post = ({ postType, pid, views, text, postBy, meta, comments, score, votes
                     <div id="postText" className="postText">
                         {handleHyperlink(text)}
                     </div>
-                    <div className="postAuthor">
+                    <div className="postAuthor"
+                         onClick={() => {
+                             handleProfile(postBy._id);
+                         }}
+                    >
                         <div className="post_author">{postBy && postBy.display_name}</div>
                         <div className="post_question_meta">{postType==="question"?'asked':''} {meta}</div>
                     </div>
@@ -89,6 +95,7 @@ const Post = ({ postType, pid, views, text, postBy, meta, comments, score, votes
                             handleVote={handleVote}
                             user={user}
                             handleLogin={handleLogin}
+                            handleProfile={handleProfile}
                         />
                     ))
                 }

@@ -157,6 +157,7 @@ const Main = ({
             handleNewAnswer={handleNewAnswer}
             user={user}
             handleLogin={handleLogin}
+            handleProfile={handleProfile}
           />
         );
         break;
