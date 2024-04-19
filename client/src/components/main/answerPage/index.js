@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMetaData, loginWrapper } from "../../../tool";
+import { getMetaData, loginWrapper, sortAnswers } from "../../../tool";
 import AnswerHeader from "./header";
 import Post from "./post";
 import "./index.css";
@@ -14,19 +14,28 @@ import ActionButton from "../baseComponents/button";
 const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer, user, handleLogin }) => {
     const [question, setQuestion] = useState(null);
     const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [answerOrder, setAnswerOrder] = useState('score');
     let withLogin = loginWrapper(user, handleLogin);
 
     const fetchData = async (shouldIncrementView) => {
         let res = await AnswerPage.getQuestionById(qid, shouldIncrementView);
-        setQuestion(res || null); 
-        if(!res) setSnackbarMessage("Question does not exist. Please head back to the Main Page.")
-        console.log('Fetch Data');
-        console.log(res);
+        if(!res) {
+            setSnackbarMessage("Question does not exist. Please head back to the Main Page.")
+            setQuestion(null)
+        } else {
+            res.answers = sortAnswers(answerOrder, res.answers)
+            setQuestion(res);
+        }
     };
 
     useEffect(() => {
         fetchData(true).catch((e) => console.log(e));
-    }, [qid, user]);
+    }, [qid]);
+
+    useEffect(() => {
+        // Dont increment view when sorting answer order
+        fetchData(false).catch((e) => console.log(e));
+    }, [user, answerOrder]);
 
     const handleSnackbarClose = () => {
         setSnackbarMessage('');
@@ -102,6 +111,22 @@ const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer, user, handleLogin
                         handleAddComment={handleAddComment}
                         handleMarkSolution={handleMarkSolution}
                     />
+
+                    <div className="sort_answers">
+                        {["score", "newest"].map((m, idx) => {
+                            let bgColor = answerOrder === m ? 'bg-green': 'bg-initial' 
+                            return(
+                                <ActionButton
+                                    key={idx}
+                                    buttonText={m}
+                                    clickMethod={() =>{setAnswerOrder(m)}}
+                                    styling={'order_btn ' + bgColor}
+                                />
+                                )
+                            }
+                        )}
+                    </div>
+
                     {question &&
                         question.answers &&
                         question.answers.map(a => {

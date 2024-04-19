@@ -1,5 +1,4 @@
 import "./index.css";
-import OrderButton from "./orderButton";
 import ActionButton from "../../baseComponents/button";
 
 const QuestionHeader = ({
@@ -22,11 +21,13 @@ const QuestionHeader = ({
         <div id="question_count">{qcnt} questions</div>
         <div className="btns">
           {["Newest", "Active", "Unanswered"].map((m, idx) => (
-            <OrderButton
+            <ActionButton
               key={idx}
-              message={m}
-              setQuestionOrder={setQuestionOrder}
+              styling="btn"
+              buttonText={m}
+              clickMethod={()=>{setQuestionOrder(m)}}
             />
+           
           ))}
         </div>
       </div>

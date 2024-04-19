@@ -107,4 +107,23 @@ const loginWrapper = (user, handleLogin) => {
     return wrappedFunction;
 };
 
-export { getMetaData, handleHyperlink, validateHyperlink, loginWrapper };
+const sortAnswers = (order, answers) =>{
+    if (!answers) return
+    if (order === 'score') {
+        answers.sort((a, b) => {
+            if (a.score !== b.score) {
+                return b.score - a.score;
+            } else {
+                return new Date(a.ans_date_time) - new Date(b.ans_date_time);
+            }
+        });
+    } else if (order === 'newest') {
+        answers.sort((a, b) => {
+            return new Date(b.ans_date_time) - new Date(a.ans_date_time);
+        });
+    }
+
+    return answers;
+}
+
+export { getMetaData, handleHyperlink, validateHyperlink, loginWrapper, sortAnswers };

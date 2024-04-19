@@ -74,12 +74,20 @@ it('Render a Answer Page Component and verify all details', () => {
           {
             text: 'You can use Jest as a test runner and Enzyme for rendering and traversing React components.',
             ans_by: {display_name: 'Jane Smith'},
-            ans_date_time: '2023-04-03T13:00:00Z',
+            ans_date_time: new Date('2023-04-03T13:00:00Z'),
+            score: 10
           },
           {
             text: 'You can use Jest as a test runner and Enzyme for rendering and traversing React components.',
             ans_by: {display_name: 'Jane Smith'},
-            ans_date_time: '2023-04-03T13:00:00Z',
+            ans_date_time: new Date('2023-04-03T13:00:00Z'),
+            score: 10
+          },
+          {
+            text: 'Test Sorting - newest but score 0',
+            ans_by: {display_name: 'sorter'},
+            ans_date_time:  new Date('2024-01-01T13:00:00Z'),
+            score:0
           },
         ],
       };
@@ -114,6 +122,15 @@ it('Render a Answer Page Component and verify all details', () => {
     .find('div')
     .should('have.text', question.answers[0].text);
     cy.get('.post_author').eq(2).should('have.text',
+      question.answers[0].ans_by.display_name)
+
+    // Sort post answers
+    cy.get('.sort_answers').contains('newest').click();
+    cy.get('.post > #postText')
+    .eq(1)
+    .find('div')
+    .should('have.text', question.answers[0].text);
+    cy.get('.post_author').eq(1).should('have.text',
       question.answers[0].ans_by.display_name)
 
     cy.get('.ansButton').click();

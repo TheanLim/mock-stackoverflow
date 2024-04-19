@@ -1,5 +1,5 @@
 import QuestionHeader from '../../src/components/main/questionPage/header';
-import OrderButton from '../../src/components/main/questionPage/header/orderButton';
+import ActionButton from '../../src/components/main/baseComponents/button';
 import Question from '../../src/components/main/questionPage/question';
 
 // Question Page - Order Button
@@ -7,9 +7,11 @@ it('Rendering Order Button', () => {
     const message = 'Test Message'
     const setQuestionOrderSpy = cy.spy('').as('setQuestionOrderSpy')
     
-    cy.mount(<OrderButton 
-        message={message} 
-        setQuestionOrder={setQuestionOrderSpy}/>)
+    cy.mount(<ActionButton 
+        styling="btn"
+        buttonText={message} 
+        clickMethod={()=>{setQuestionOrderSpy(message)}}/>)
+
      cy.get('.btn').click()
      cy.get('@setQuestionOrderSpy').should('have.been.calledWith', message);
 

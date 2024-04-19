@@ -5,3 +5,20 @@
 .ansButton {
     margin: 2% 0 2% 2%;
 }
+
+.sort_answers{
+    display: flex;
+    justify-content: right;
+    margin-right: 15px;
+    margin-bottom: 35px;
+}
+
+.order_btn{
+    border-radius: 8px;
+    height: 30px;
+    margin-right: 2px;
+}
+
+.bg-green{
+    background-color: rgb(87, 171, 136);
+}
