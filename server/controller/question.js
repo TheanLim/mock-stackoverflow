@@ -2,12 +2,14 @@ const express = require("express");
 const Question = require("../models/questions");
 const User = require("../models/users");
 const {addTag, getQuestionsByOrder, filterQuestionsBySearch} = require('../utils/question');
+const { sanitizeAndEscapeInput } = require('../utils/tools');
 
 const router = express.Router();
 
 // To get Questions by Filter
 const getQuestionsByFilter = async (req, res) => {
   try {
+    req.query = sanitizeAndEscapeInput(req.query);
     let questions_list = await getQuestionsByOrder(req.query.order);
     questions_list = filterQuestionsBySearch(questions_list, req.query.search);
     res.send(questions_list);
@@ -19,9 +21,9 @@ const getQuestionsByFilter = async (req, res) => {
 // To get Questions by Id
 const getQuestionById = async (req, res) => {
   try {
-    let incrementView = req.query.incrementView !== 'false'; 
+    let incrementView = sanitizeAndEscapeInput(req.query.incrementView) !== 'false'; 
     const question = await Question.findOneAndUpdate(
-      {_id: req.params.qid},
+      {_id: sanitizeAndEscapeInput(req.params.qid)},
       incrementView ? { $inc: { views: 1 } } : {}, 
       { new: true }
       )
@@ -62,7 +64,7 @@ const getQuestionById = async (req, res) => {
 // To add Question
 const addQuestion = async (req, res) => {
   try {
-    let requestBody = req.body;
+    let requestBody = sanitizeAndEscapeInput(req.body);
     requestBody.asked_by = await User.findById(req.session.user);
     const reputation = requestBody.asked_by.reputation;
     requestBody.tags = await Promise.all(requestBody.tags.map(tname => addTag(tname, reputation)));

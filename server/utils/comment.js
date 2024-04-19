@@ -1,11 +1,13 @@
 const Comment = require("../models/comments");
 const User = require("../models/users");
 const { handleVoteReputation, checkReputation } = require("../utils/reputation");
+const { sanitizeAndEscapeInput } = require('./tools');
 
 const addComment = async (req, res, Model) => {
     try {
         const user = await User.findById(req.session.user);
 
+        req.body = sanitizeAndEscapeInput(req.body)
         const id = req.body.id;
         const text = req.body.text;
         const modelItem = await Model.findById(id).populate('comments').populate('postOwner');

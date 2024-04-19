@@ -1,7 +1,8 @@
 const Comment = require("../models/comments");
 const User = require("../models/users");
 const Vote = require("../models/votes");
-const { handleVoteReputation, checkReputation } = require("../utils/reputation");
+const { handleVoteReputation, checkReputation } = require("./reputation");
+const { sanitizeAndEscapeInput } = require('./tools')
 
 const MAX_FLAGS = 6; // Delete a post when it's flagged more than this number of times
 const MAX_CLOSE_REOPEN = 3; // Close a post when it's closed more than this number of times
@@ -73,6 +74,7 @@ const addVote = async (req, res, Model) => {
     try {
         const user = await User.findById(req.session.user);
 
+        req.body = sanitizeAndEscapeInput(req.body);
         const id = req.body.id;
         const voteType = req.body.vote_type;
         const voteReason = req.body.vote_reason ? req.body.vote_reason : '';

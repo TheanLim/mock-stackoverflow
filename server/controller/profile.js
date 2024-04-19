@@ -1,6 +1,7 @@
 const express = require("express");
 const User = require("../models/users");
 const Question = require("../models/questions");
+const { sanitizeAndEscapeInput } = require('../utils/tools');
 
 const router = express.Router();
 
@@ -25,7 +26,7 @@ const viewProfile = async (req, res) => {
     if (req.session && req.session.user) {
       currentlyLoggedIn = req.session.user;
     }
-    const user = await User.findById(req.params.uid);
+    const user = await User.findById(sanitizeAndEscapeInput(req.params.uid));
     if (!user) {
       res.status(401).json({error: "Incorrect id to profile."})
     } else {
@@ -49,7 +50,7 @@ const viewProfile = async (req, res) => {
 
 const editProfile = async (req, res) => {
   try {
-    let userChanges = req.body;
+    let userChanges = sanitizeAndEscapeInput(req.body);
     //TODO: MOVE CHECK FOR EXISTING USERS TO UTILS
     let existing = await User.findOne({display_name: userChanges.display_name});
     if (existing && existing._id.toString() !== req.session.user) {

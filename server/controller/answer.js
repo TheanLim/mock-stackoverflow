@@ -3,12 +3,14 @@ const { Types } = require('mongoose');
 const Answer = require("../models/answers");
 const Question = require("../models/questions");
 const User = require("../models/users");
+const { sanitizeAndEscapeInput } = require('../utils/tools')
 
 const router = express.Router();
 
 // Adding answer
 const addAnswer = async (req, res) => {
   try {
+    req.body = sanitizeAndEscapeInput(req.body)
     let answerBody = req.body.ans;
 
     answerBody.ans_by = await User.findById(req.session.user);
@@ -27,6 +29,7 @@ const addAnswer = async (req, res) => {
 
 const markAnswerAsSolution = async (req, res) => {
   try {
+    req.body = sanitizeAndEscapeInput(req.body)
     const qid = req.body.qid;
     const aid = req.body.aid;
     const aidObjectId = new Types.ObjectId(aid);

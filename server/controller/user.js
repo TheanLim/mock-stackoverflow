@@ -2,7 +2,7 @@ const express = require("express");
 const User = require("../models/users");
 const bcrypt = require("bcrypt");
 const csurf = require('csurf');
-
+const { sanitizeAndEscapeInput } = require('../utils/tools');
 
 const router = express.Router();
 const SALT_ROUNDS = 10;
@@ -38,7 +38,7 @@ const logout = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const {email, password} = req.body;
+    const {email, password} = sanitizeAndEscapeInput(req.body);
     if (!email || !password) {
       return res.status(400).json({error: 'User email and password are required.'})
     }
@@ -62,8 +62,9 @@ const login = async (req, res) => {
 };
 
 const signUp = async (req, res) => {
+  req.body = sanitizeAndEscapeInput(req.body);
   try {
-    let user = await User.findOne({email: req.body.email});
+    let user = await User.findOne({email: (req.body.email)});
     if (user) {
       return res.status(403).json({error: 'Email already exists'});
     }

@@ -5,6 +5,7 @@ const Question = require("../models/questions");
 const Comment = require("../models/comments");
 const { checkReputation } =  require("../utils/reputation");
 const { addVote } = require("../utils/vote");
+const { sanitizeAndEscapeInput } = require("../utils/tools");
 const router = express.Router();
 
 const addVoteToQuestion = async (req, res) =>{
@@ -22,7 +23,7 @@ const addVoteToComment = async (req, res) => {
 const isAuthorizedToVote = async (req, res) => {
     try {
         const user = await User.findById(req.session.user);
-        const reputationCheck = checkReputation(user, req.params.voteType);
+        const reputationCheck = checkReputation(user, sanitizeAndEscapeInput(req.params.voteType));
         if (!reputationCheck.success) {
             return res.status(401).json({ error: reputationCheck.error });
         }
