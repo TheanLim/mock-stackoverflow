@@ -108,3 +108,9 @@ dist
 
 **/package-lock.json
 
+# Jest reports
+**/reports
+
+# Cypress screenshots and reports
+**/cypress/screenshots/
+**/cypress/videos/

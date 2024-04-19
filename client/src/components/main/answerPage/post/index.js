@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { isAuthorizedToVote } from "../../../../services/voteService";
 import Comment from "../comment";
 import "./index.css";
-import { VotingButtons } from "../../baseComponents/votingbuttons";
+import VotingButtons from "../../baseComponents/votingbuttons";
 import { FlaggingButtons } from "../../baseComponents/flaggingbuttons";
 import { SolutionButton } from "../../baseComponents/solutionbutton";
 
@@ -31,9 +31,9 @@ const Post = ({ postType, pid, views, text, postBy, meta, comments, score, votes
         if (user) {
             const checkVoteAuthorization = async () => {
                 let res;
-                res = await isAuthorizedToVote('flag');
+                res = await Post.isAuthorizedToVote('flag');
                 setIsAuthorizedToFlag(res === true || false);
-                res = await isAuthorizedToVote('close'); // same reputation as reopen
+                res = await Post.isAuthorizedToVote('close'); // same reputation as reopen
                 setIsAuthorizedToCloseReopen(res === true || false);
             };
     
@@ -98,4 +98,5 @@ const Post = ({ postType, pid, views, text, postBy, meta, comments, score, votes
     );
 };
 
+Post.isAuthorizedToVote = isAuthorizedToVote
 export default Post;

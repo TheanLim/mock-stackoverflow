@@ -31,10 +31,10 @@ const Comment = (
         if (user) {
             const checkVoteAuthorization = async () => {
                 let res;
-                res = await isAuthorizedToVote('flag');
+                res = await Comment.isAuthorizedToVote('flag');
                 setIsAuthorizedToFlag(res || false);
     
-                res = await isAuthorizedToVote('upvote');
+                res = await Comment.isAuthorizedToVote('upvote');
                 setIsAuthorizedToUpvote(res || false);
             };
     
@@ -61,7 +61,7 @@ const Comment = (
     const flagClass = (isFlagged ? 'flag-black': 'flag-transparent') + (isUserPostOwner?' no-hover': '')
     
     return (
-        <>
+        <div className="Comment">
             {text && (
                 <div className="comment">
                     {votes && (
@@ -135,9 +135,10 @@ const Comment = (
                     style={{ width: "75%" }} 
                 />
             }
-        </>
+        </div>
     );
 };
 
 Comment.isAuthorizedToComment = isAuthorizedToComment;
+Comment.isAuthorizedToVote = isAuthorizedToVote;
 export default Comment;
