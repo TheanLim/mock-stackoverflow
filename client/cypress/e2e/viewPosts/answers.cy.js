@@ -52,6 +52,7 @@ describe('Answer Page 3', () => {
 
         // Sort by newest
         cy.get('.sort_answers').contains('newest').click();
+        cy.wait(500);
         const reversedAnswer = [...answers].reverse();
         cy.get('.post_comment_main').each(($el, index) => { // first element is the question
             if (index > 0) {

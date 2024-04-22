@@ -176,7 +176,7 @@ describe('Post Moderation - Flagging Questions', () => {
       .find('.flag_close_reopen').contains('flag');
   })
 
-  it('Should delete a question and inform user if 6 users flag it', () => {
+  it('Should delete a question and display snackbar to user if 6 users flag it', () => {
     cy.visit('http://localhost:3000');
     cy.get('.bluebtn').contains("Sign In").click();
     cy.get('#formEmailInput').type('test2@gmail.com');

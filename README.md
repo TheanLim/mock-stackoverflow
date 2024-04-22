@@ -7,6 +7,12 @@ Login with your Northeastern credentials and read the project description [here]
 ## List of Requirements
 [View List of Required Features](https://docs.google.com/document/d/1GK8ENPpDvcV6Z5iWohmAPjmR76EHyWVnKtPXWwGFc5w/edit?usp=sharing)
 
+## Regarding Testing:
+We used a SnackBar to display error messages when users attempt to do certain actions.
+Cypress has trouble getting the SnackBar and because of this, these tests are flaky.
+When running the tests, if the test mentions a SnackBar, it does regularly pass, but if it fails, this is due to it being flaky.
+
+
 ## List of features
 
 All the features you have implemented. 
