@@ -28,6 +28,24 @@ All the features you have implemented.
 | Mark Post as Solution (EXTRA CREDIT)      | Allow users to mark an answer post as the solution to a specific question.                 | /client/cypress/e2e/solution     | /client/cypress/component/solution                                                           | '/answer/markAnswerAsSolution': /server/tests/solution                                             |
 
 
+## Prerequisites:
+- Install MongoDB on your local machine.
+- Install NodeJS on your local machine.
+
+## Dependency Setup Instructions (From root):
+```
+cd server
+npm install
+cd ../client
+npm install
+```
+
+## Database Initialization Instructions:
+```
+cd server
+node init.js
+```
+
 ## Instructions to generate and view coverage report 
 
 Generate the coverage report by running the following instructions:
