@@ -13,6 +13,7 @@ export default function FakeStackOverflow() {
   const setQuestionPage = (search = "", title = "All Questions") => {
     setSearch(search);
     setMainTitle(title);
+    setAppStatus("searching");
   };
 
   const updateAppStatus = (status) => {

@@ -82,6 +82,22 @@ describe('Comment - if text is NOT provided -> test button click, text area and 
     cy.get('@handleAddCommentStub').should('be.calledWith', props.parentPostType, props.parentId, commentText);
   });
 
+  it('should trigger validateHyperlink with correct arguments when Enter is pressed in the textarea', () => {
+    // Only renders when the user is authorized
+    props.user = { _id: 'user3' };
+    const commentText = 'This is a new comment';
+    cy.stub(Comment, 'isAuthorizedToComment').as('isAuthorizedToCommentStub').resolves(true);
+    cy.stub(Comment, 'validateHyperlink').as('validateHyperlinkStub').returns(true);
+
+    cy.mount(<Comment {...props} />);
+
+    cy.get('.comment_button').click();
+    cy.get('textarea').type(`${commentText}{enter}`);
+
+    cy.get('@validateHyperlinkStub').should('have.been.calledWith', commentText);
+    cy.get('@handleAddCommentStub').should('be.calledWith', props.parentPostType, props.parentId, commentText);
+  });
+
   it('should hide the textarea when Escape is pressed', () => {
     // Only renders when the user is authorized
     props.user = { _id: 'user3' };
@@ -137,6 +153,14 @@ describe('Comment - if text is provided, check score, upvote and flag buttons. '
     cy.mount(<Comment {...props} />);
   
     cy.get('.comment_score').should('contain.text', props.score);
+  });
+
+  it('should call handleHyperlink when displaying text', () => {
+    cy.stub(Comment, 'handleHyperlink').as('handleHyperlinkStub').returns(props.text + " Checked!");
+    cy.mount(<Comment {...props} />);
+
+    cy.get('@handleHyperlinkStub').should('have.been.calledWith', props.text);
+    cy.get('.comment_text').should('contain.text', props.text + " Checked!");
   });
 
   // Start testing Upvote/Flag button

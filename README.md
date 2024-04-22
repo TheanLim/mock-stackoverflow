@@ -11,7 +11,8 @@ Login with your Northeastern credentials and read the project description [here]
 
 All the features you have implemented. 
 
-| Feature                                   | Description                                                                                | E2E Tests                        | Component Tests                                                                              | Jest Tests                                                                                         |
+
+| Feature                                   | Description                                                                                | E2E Tests                        | Component Tests                                                                              | Jest Tests  ('<Endpoint>': <path/to/endpoint)                                                      |
 |-------------------------------------------|--------------------------------------------------------------------------------------------|----------------------------------|----------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
 | User Validation / Authentication          | Validate user identity throughout application.                                             | /client/cypress/e2e/userAuth     | /client/cypress/component/userAuth                                                           | '/user/validateAuth' & '/user/csrf-token': /server/tests/accounts                                  |
 | View Posts                                | Allow users to view existing posts, including metadata (i.e., vote count) on the platform. | /client/cypress/e2e/viewPosts    | /client/cypress/component/viewPosts                                                          | '/question/getQuestion' & '/question/getQuestionByID/:qid': /server/tests/viewPosts                |
@@ -28,6 +29,14 @@ All the features you have implemented.
 
 
 ## Instructions to generate and view coverage report 
+
+Generate the coverage report by running the following instructions:
+```
+cd server
+npx jest --runInBand --coverage
+```
+Alternatively, you can view the coverage report in the CI setup under Actions by checking either the artifacts or the
+output of the server-side tests.
 
 ## Extra Credit Section (if applicable)
 Developed Extra Requirements:

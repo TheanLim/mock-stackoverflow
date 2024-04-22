@@ -83,7 +83,7 @@ const validateHyperlink = (text) => {
 };
 
 const handleHyperlink = (text = "") => {
-    const pattern = /\[([^\]]*)\]\(([^)]*)\)/g;
+    const pattern = /\[([^\]]*)\]&#40;([^)]*)&#41;/g;
 
     const replacedText = text.replace(
         pattern,

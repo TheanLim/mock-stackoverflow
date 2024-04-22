@@ -228,6 +228,70 @@ describe('New Question Form with same tags', () => {
   });
 });
 
+describe('New Question Form validates hyperlink', () => {
+  it('Ask a Question creates a question with proper hyperlink treatment', () => {
+    cy.visit("http://localhost:3000");
+    cy.contains('Sign In').click();
+    cy.get('#formEmailInput').type('test1@gmail.com');
+    cy.get('#formPasswordInput').type('test123');
+    cy.get('.form_postBtn').click();
+    cy.contains("Ask a Question").click();
+    cy.get("#formTitleInput").type("How to add a hyperlink in Markdown?");
+    cy.get("#formTextInput").type(
+      "Here is a link: [Google](https://www.google.com)"
+    );
+    cy.get("#formTagInput").type("markdown");
+    cy.contains("Post Question").click();
+    cy.contains("How to add a hyperlink in Markdown?").click();
+    cy.get(".postText").first()
+      .find("a")
+      .should("have.attr", "href", "https://www.google.com");
+  });
+
+  it("Tries to add a question with an invalid hyperlink and verifies failure", () => {
+    const invalidUrls = [
+      "[Google](htt://www.google.com)",
+      "[Microsoft](microsoft.com)",
+      "[](https://www.google.com/)",
+      "[link]()",
+      "dfv[]()",
+      "[link](http://www.google.com/)",
+      "[Google](https//www.google.com)",
+      "[GitHub](http//github.com)",
+      "[Facebook](https:/facebook.com)",
+      "[Twitter](://twitter.com)",
+      "[Netflix](htps://www.netflix)",
+      "[Google](htts://www.goo<gle.com)",
+      "[Google](http://www.google)",
+      "[Dropbox](ttps://www.dropbox.c-m)",
+      "[LinkedIn](ps:/www.linkedin.com)",
+      "[Adobe](ttps://www.adobe..com)",
+      "[Spotify](ttp:///www.spotify.com)",
+      "[Reddit](http://reddit)",
+      "[Wikipedia](tps://www.wikipedia=com)",
+    ];
+    cy.visit("http://localhost:3000");
+    cy.contains('Sign In').click();
+    cy.get('#formEmailInput').type('test1@gmail.com');
+    cy.get('#formPasswordInput').type('test123');
+    cy.get('.form_postBtn').click();
+    cy.contains("Ask a Question").click();
+    cy.get("#formTitleInput").type(
+      "How to add an invalid hyperlink in Markdown?"
+    );
+    invalidUrls.forEach((url) => {
+      cy.get("#formTextInput").clear().type(`This is an invalid link: ${url}`);
+      cy.get("#formTagInput").clear().type("markdown");
+      cy.contains("Post Question").click();
+      cy.contains("Invalid hyperlink format.");
+    });
+    cy.visit("http://localhost:3000");
+    cy.contains("How to add an invalid hyperlink in Markdown?").should(
+      "not.exist"
+    );
+  });
+});
+
 describe('New Question Form when Logged In', () => {
   it('Clicking Ask a Question when signed in immediately redirects to create and display', () => {
     cy.visit('http://localhost:3000');

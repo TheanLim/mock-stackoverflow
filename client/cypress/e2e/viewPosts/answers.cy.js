@@ -58,7 +58,6 @@ describe('Answer Page 3', () => {
                 cy.wrap($el).should('contain', reversedAnswer[index - 1]);
             }
         });
-
     });
 });
 

@@ -6,8 +6,8 @@ const votingActionInfo = {
     },
     downvote: {
         reputation: 125,
-        voterRepChange: -2,
-        postOwnerRepChange: -1
+        voterRepChange: -1,
+        postOwnerRepChange: -2
     },
     flag: {
         reputation: 15,

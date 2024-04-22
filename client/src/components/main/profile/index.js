@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import "./index.css";
 
 import {viewUserProfile} from "../../../services/profileService";
-import {getMetaData} from "../../../tool";
+import {getMetaData, handleHyperlink} from "../../../tool";
 import ActionButton from "../baseComponents/button";
 
 const Profile = ({profileUser, handleAnswer, handleEditProfile}) => {
@@ -20,7 +20,7 @@ const Profile = ({profileUser, handleAnswer, handleEditProfile}) => {
     };
 
     fetchData().catch((e) => console.log(e));
-  }, []);
+  }, [profileUser]);
 
   const renderQuestionList = (list, type) => {
     return (
@@ -67,7 +67,7 @@ const Profile = ({profileUser, handleAnswer, handleEditProfile}) => {
       {profileInfo.about_summary &&
         <div className="about-summary">
           <div><strong>About</strong></div>
-          {profileInfo.about_summary}
+          {Profile.handleHyperlink(profileInfo.about_summary)}
         </div>
       }
       {ownership &&
@@ -93,4 +93,5 @@ const Profile = ({profileUser, handleAnswer, handleEditProfile}) => {
 
 Profile.viewUserProfile = viewUserProfile;
 Profile.getMetaData = getMetaData;
+Profile.handleHyperlink = handleHyperlink;
 export default Profile;

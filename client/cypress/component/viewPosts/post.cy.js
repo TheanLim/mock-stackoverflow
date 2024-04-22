@@ -58,6 +58,13 @@ describe('Post', () => {
     cy.get('#postText').should('contain.text', props.text);
   });
 
+  it('should call handleHyperlink when rendering text', () => {
+    cy.stub(Post, 'handleHyperlink').as('handleHyperlinkStub').returns(props.text + " Checked!");
+    cy.mount(<Post {...props} />);
+    cy.get('@handleHyperlinkStub').should('have.been.calledWith', props.text);
+    cy.get('.postText').contains(props.text + " Checked!");
+  });
+
   it('should render the post author and meta', () => {
     cy.mount(<Post {...props} />);
     cy.get('.postAuthor').should('contain.text', props.postBy.display_name);

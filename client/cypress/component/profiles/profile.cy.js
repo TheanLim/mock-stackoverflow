@@ -99,6 +99,54 @@ it('calls getMetaData when loading the profile', () => {
   cy.get('@getMetaDataStub').should('have.been.calledWith', new Date(mockQList[0].answers[0].ans_date_time));
 });
 
+it('calls handleHyperlink when loading the about section of profile', () => {
+  const mockUser = {
+    _id: '0000ffff',
+    reputation: 1,
+    first_name: 'Test First Name',
+    last_name: 'Test Last Name',
+    email: "test@example.com",
+    about_summary: "About Me",
+    display_name: 'test display name',
+    date_joined: (new Date('3/12/2024')).toISOString(),
+    time_last_seen: (new Date('3/12/2024')).toISOString(),
+  };
+  const mockQList = [
+    {
+      title: "Test Title",
+      asked_by: mockUser,
+      ask_date_time: (new Date('3/12/2024')).toISOString(),
+      answers: [
+        {ans_date_time: (new Date('3/12/2024')).toISOString()}
+      ]
+    }
+  ];
+
+  const mockResponse = {
+    profile: mockUser,
+    profileOwner: true,
+    questions: mockQList,
+    answers: mockQList
+  }
+  cy.stub(Profile, 'viewUserProfile').as('viewUserProfileStub').resolves(mockResponse);
+  cy.stub(Profile, 'getMetaData').as('getMetaDataStub').returns("DateRes");
+  cy.stub(Profile, 'handleHyperlink').as('handleHyperlinkStub')
+    .returns(mockUser.about_summary + " Checked!");
+
+  cy.mount(<Profile
+    profileUser={"0000ffff"}
+    handleAnswer={() => {}}
+    handleEditProfile={() => {}}
+  />)
+
+  cy.get('@viewUserProfileStub').should('have.been.calledWith', mockUser._id);
+  cy.get('@getMetaDataStub').should('have.been.calledWith', new Date(mockUser.date_joined));
+  cy.get('@getMetaDataStub').should('have.been.calledWith', new Date(mockUser.time_last_seen));
+  cy.get('@getMetaDataStub').should('have.been.calledWith', new Date(mockQList[0].ask_date_time));
+  cy.get('@getMetaDataStub').should('have.been.calledWith', new Date(mockQList[0].answers[0].ans_date_time));
+  cy.get('@handleHyperlinkStub').should('have.been.calledWith', mockUser.about_summary);
+});
+
 it('calls handleAnswer when clicking on a Asked Question', () => {
   const mockUser = {
     _id: '0000ffff',

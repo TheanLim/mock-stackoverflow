@@ -6,6 +6,7 @@ import "./index.css";
 
 import { viewUserProfile, updateProfile } from "../../../services/profileService";
 import ActionButton from "../baseComponents/button";
+import {validateHyperlink} from "../../../tool";
 
 const EditProfile = ({ profileUser, handleProfile }) => {
   const [displayName, setDisplayName] = useState("");
@@ -52,6 +53,18 @@ const EditProfile = ({ profileUser, handleProfile }) => {
     return true;
   }
 
+  const validateAboutSummary = () => {
+
+    if (about.length > 500) {
+      setAboutErr("Limit about section to 500 characters or less.")
+      return false;
+    } else if (!EditProfile.validateHyperlink(about)) {
+      setAboutErr("Invalid hyperlink format.");
+      return false;
+    }
+    return true;
+  }
+
   const clearErrors = () => {
     setEmailErr("");
     setDisplayNameErr("");
@@ -67,11 +80,7 @@ const EditProfile = ({ profileUser, handleProfile }) => {
     isValid = validateNotEmpty(displayName, "display name", setDisplayNameErr) && isValid;
     isValid = validateNotEmpty(fName, "first name", setFNameErr) && isValid;
     isValid = validateNotEmpty(lName, "last name", setLNameErr) && isValid;
-
-    if (about.length > 230) {
-      setAboutErr("Limit about section to 230 words or less.")
-      isValid = false;
-    }
+    isValid = validateAboutSummary() && isValid;
 
     if (!isValid) {
       return;
@@ -117,7 +126,7 @@ const EditProfile = ({ profileUser, handleProfile }) => {
       />
       <Textarea
         title={"About Summary"}
-        hint={"Edit your personal summary"}
+        hint={"Edit your personal summary (500 characters or less)"}
         id={"formAboutText"}
         val={about}
         setState={setAbout}
@@ -152,4 +161,5 @@ const EditProfile = ({ profileUser, handleProfile }) => {
 
 EditProfile.updateProfile = updateProfile;
 EditProfile.viewUserProfile = viewUserProfile;
+EditProfile.validateHyperlink = validateHyperlink;
 export default EditProfile;

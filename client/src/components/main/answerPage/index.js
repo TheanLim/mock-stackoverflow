@@ -11,7 +11,7 @@ import Snackbar from "../baseComponents/snackbar";
 import ActionButton from "../baseComponents/button";
 
 // Component for the Answers page
-const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer, user, handleLogin, handleProfile }) => {
+const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer, user, clickTag, handleLogin, handleProfile }) => {
     const [question, setQuestion] = useState(null);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [answerOrder, setAnswerOrder] = useState('score');
@@ -68,10 +68,14 @@ const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer, user, handleLogin
     });
 
     const handleAddComment = withLogin(async(parentItemType, itemId, comment) => {
-        let res;
-        if (parentItemType === 'answer') res = await AnswerPage.addCommentToAnswer(itemId, comment);
-        else if (parentItemType === 'question') res = await AnswerPage.addCommentToQuestion(itemId, comment);
-        handleResponse(res)
+        if (comment.length === 0) {
+            setSnackbarMessage("You must enter text to comment");
+        } else {
+            let res;
+            if (parentItemType === 'answer') res = await AnswerPage.addCommentToAnswer(itemId, comment);
+            else if (parentItemType === 'question') res = await AnswerPage.addCommentToQuestion(itemId, comment);
+            handleResponse(res)
+        }
     });
 
     const handleMarkSolution = withLogin(async(aid) => {
@@ -106,6 +110,8 @@ const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer, user, handleLogin
                         votes={question.votes}
                         status={question.status}
                         user={user}
+                        tags={question && question.tags}
+                        clickTag={clickTag}
                         handleVote={handleVote}
                         handleLogin={handleLogin}
                         handleAddComment={handleAddComment}

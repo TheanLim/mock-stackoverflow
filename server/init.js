@@ -129,6 +129,11 @@ const init = async () => {
     "commenter", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 50
   );
+  await userCreate(
+    "test6@gmail.com", "New", "Here",
+    "newUser", fakePassword, "",
+    new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 1
+  );
 
   // Added more 'CloseReopenErs' to test Close/Reopen a post
   await userCreate(
@@ -149,27 +154,27 @@ const init = async () => {
   //
 
   // Added more 'Flaggers' to test flagging a post until it gets deleted.
-  await userCreate(
+  let f1 = await userCreate(
     "f1@gmail.com", "Flagger", "Flagger",
     "Flagger", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
   );
-  await userCreate(
+  let f2 = await userCreate(
     "f2@gmail.com", "Flagger", "Flagger",
     "Flagger1", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
   );
-  await userCreate(
+  let f3 = await userCreate(
     "f3@gmail.com", "Flagger", "Flagger",
     "Flagger2", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
   );
-  await userCreate(
+  let f4 = await userCreate(
     "f4@gmail.com", "Flagger", "Flagger",
     "Flagger3", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
   );
-  await userCreate(
+  let f5 = await userCreate(
     "f5@gmail.com", "Flagger", "Flagger",
     "Flagger4", fakePassword, "",
     new Date('2023-04-03T18:20:59'), new Date('2023-04-04T18:20:59'), 15
@@ -208,6 +213,24 @@ const init = async () => {
   let v6 = await voteCreate(
     u2, "flag", "Inflammatory content"
   );
+
+  let v7a = await voteCreate(
+    f1, "flag", "Inflammatory content"
+  );
+  let v7b = await voteCreate(
+    f2, "flag", "Inflammatory content"
+  );
+  let v7c = await voteCreate(
+    f3, "flag", "Inflammatory content"
+  );
+  let v7d = await voteCreate(
+    f4, "flag", "Inflammatory content"
+  );
+  let v7e = await voteCreate(
+    f5, "flag", "Inflammatory content"
+  );
+
+
   let c1 = await commentCreate(
     "Comment 1", u5, new Date('2023-04-03T18:20:59'), [v5b]
   );
@@ -218,7 +241,7 @@ const init = async () => {
     "Comment 3", u2, new Date('2023-04-03T20:20:59'), []
   );
   let c4 = await commentCreate(
-    "Comment 4", u5, new Date('2023-04-03T21:20:59'), []
+    "Comment 4", u5, new Date('2023-04-03T21:20:59'), [v7a, v7b, v7c, v7d, v7e]
   );
   let c5 = await commentCreate(
     "Comment 5", u5, new Date('2023-04-03T22:20:59'), []
@@ -226,13 +249,16 @@ const init = async () => {
   let c6 = await commentCreate(
     "Comment 6", u5, new Date('2023-04-03T22:20:59'), [v3]
   );
+  let c7 = await commentCreate(
+    "Comment 7", u3, new Date('2023-04-03T22:20:59'), []
+  );
 
   let a1 = await answerCreate('React Router is mostly a wrapper around the history library. history handles interaction with the browser\'s window.history for you with its browser and hash histories. It also provides a memory history which is useful for environments that don\'t have a global history. This is particularly useful in mobile app development (react-native) and unit testing with Node.',
     u1, new Date('2023-11-20T03:24:42'), [c1, c6],
     [v2, v3]);
   let a2 = await answerCreate('On my end, I like to have a single history object that I can carry even outside components. I like to have a single history.js file that I import on demand, and just manipulate it. You just have to change BrowserRouter to Router, and specify the history prop. This doesn\'t change anything for you, except that you have your own history object that you can manipulate as you want. You need to install history, the library used by react-router.',
     u2, new Date('2023-11-23T08:24:00'), [],
-    [v2]);
+    [v2, v7a, v7b, v7c, v7d, v7e]);
   let a3 = await answerCreate('Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background.',
     u3, new Date('2023-11-18T09:24:00'), [],
     [v2, v3]);
@@ -262,7 +288,7 @@ const init = async () => {
   await questionCreate('Object storage for a web application',
     'I am currently working on a website where, roughly 40 million documents and images should be served to its users. I need suggestions on which method is the most suitable for storing content with subject to these requirements.',
     [t5, t6], [a6, a7], u3, new Date('2023-02-18T01:02:15'), 200,
-    [], [v2, v3, v4], null, "open");
+    [], [v2, v3, v4, v7a, v7b, v7c, v7d, v7e], null, "open");
   await questionCreate('Quick question about storage on android',
     'I would like to know the best way to go about storing an array on an android phone so that even when the app/activity ended the data remains',
     [t3, t4, t5], [a8], u4, new Date('2023-03-10T14:28:01'), 103,
@@ -270,7 +296,7 @@ const init = async () => {
   await questionCreate('What does the Fox Say?',
     'I really need to know what the fox says. Somebody help!!!',
     [t1], [], u5, new Date('2023-04-01T14:28:01'), 1030,
-    [], [v4, v6], null, "closed");
+    [c7], [v4, v6], null, "closed");
 
   if (db) db.close();
 

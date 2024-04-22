@@ -1,5 +1,5 @@
 import "./index.css";
-import { handleHyperlink } from "../../../../tool";
+import {handleHyperlink, validateHyperlink} from "../../../../tool";
 import { useEffect, useState } from "react";
 import { isAuthorizedToComment } from "../../../../services/commentService";
 import { isAuthorizedToVote } from "../../../../services/voteService";
@@ -44,6 +44,16 @@ const Comment = (
             setIsAuthorizedToUpvote(false);
         }
     }, [user]);
+
+    const validateCommentAdd = () => {
+        if (!Comment.validateHyperlink(val)) {
+            setSnackbarMessage("Invalid hyperlink format.");
+        } else {
+            handleAddComment(parentPostType, parentId, val);
+            setVal('');
+            setShowCommentButton(true);
+        }
+    }
     
     // Only show flag and upvote related to the current user.
     if (votes && votes.length > 0) {
@@ -75,7 +85,7 @@ const Comment = (
                         }
                     </div>
                     <div id="comment_text" className="comment_text">
-                        {handleHyperlink(text)}
+                        {Comment.handleHyperlink(text)}
                         <div className="comment_details"
                              onClick={() => {
                                  handleProfile(commentBy._id);
@@ -113,6 +123,7 @@ const Comment = (
                 <textarea
                     placeholder="Comment here...Press Esc to cancel"
                     type="text"
+                    className="comment-textarea"
                     value={val}
                     onChange={(e) => {
                         setVal(e.target.value);
@@ -120,9 +131,7 @@ const Comment = (
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
                             e.preventDefault();
-                            handleAddComment(parentPostType, parentId, val);
-                            setVal('');
-                            setShowCommentButton(true);
+                            validateCommentAdd();
                         }
                         if (e.key === "Escape") {
                             setShowCommentButton(true);
@@ -137,4 +146,6 @@ const Comment = (
 
 Comment.isAuthorizedToComment = isAuthorizedToComment;
 Comment.isAuthorizedToVote = isAuthorizedToVote;
+Comment.handleHyperlink = handleHyperlink;
+Comment.validateHyperlink = validateHyperlink;
 export default Comment;

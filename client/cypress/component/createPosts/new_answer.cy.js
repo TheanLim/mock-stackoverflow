@@ -58,3 +58,42 @@ it('handleAnswer is called when click Post Answer', () => {
     cy.get('@addAnswerStub').should('have.been.calledWith', qid, answer);
     cy.get('@handleAnswerSpy').should('have.been.calledWith', 123)
 })
+
+it('validateHyperlink is called when click Post Answer', () => {
+    const handleAnswer = cy.spy().as('handleAnswerSpy')
+    const qid = 123;
+    const answer = {
+        text: 'abc',
+        ans_date_time: new Date(),
+        score: 0,
+    };
+
+    cy.stub(NewAnswer, 'validateHyperlink').as('validateHyperlinkStub').returns(true);
+    cy.stub(NewAnswer, 'addAnswer').as('addAnswerStub').resolves({_id:"0000ffff", ...answer});
+
+    cy.mount(<NewAnswer qid={qid} handleAnswer={handleAnswer} />)
+
+    cy.get('#answerTextInput').type('abc')
+    cy.get('.form_postBtn').click();
+    cy.get('@validateHyperlinkStub').should('have.been.calledWith', answer.text)
+    cy.get('@addAnswerStub').should('have.been.calledWith', qid, answer);
+    cy.get('@handleAnswerSpy').should('have.been.calledWith', 123)
+})
+
+it('shows error message when answer text contains invalid hyperlink', () => {
+    const qid = 123;
+    const answer = {
+        text: 'abc',
+        ans_date_time: new Date(),
+        score: 0,
+    };
+
+    cy.stub(NewAnswer, 'validateHyperlink').as('validateHyperlinkStub').returns(false);
+    cy.mount(<NewAnswer qid={qid} />)
+    cy.get('#answerTextInput').should('have.value', '')
+    cy.get('#answerTextInput').type(answer.text)
+    cy.get('#answerTextInput').should('have.value', 'abc')
+    cy.get('.form_postBtn').click();
+    cy.get('@validateHyperlinkStub').should('have.been.calledWith', answer.text)
+    cy.get('div .input_error').contains('Invalid hyperlink format.');
+})

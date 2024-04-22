@@ -74,3 +74,44 @@ describe('Search 7', () => {
         cy.contains('android');
     });
 });
+
+describe('Search 8', () => {
+    it('Allows searching from any page', () => {
+        const qTitles = ['android studio save string shared preference, start activity and load the saved string'];
+        cy.visit('http://localhost:3000');
+        cy.get('.bluebtn').contains("Sign In").click();
+        cy.get('#searchBar').type('navigation{enter}');
+        cy.wait(10);
+        cy.get('.postTitle').should('contain', qTitles[0]);
+        cy.get('.bluebtn').contains("Sign In").click();
+        cy.get('#formEmailInput').type('test1@gmail.com');
+        cy.get('#formPasswordInput').type('test123');
+        cy.get('.form_postBtn').click();
+        cy.get('.menu_button').contains("Tags").click();
+        cy.get('#searchBar').type('{enter}');
+        cy.wait(10);
+        cy.get('.postTitle').should('contain', qTitles[0]);
+        cy.get('.bluebtn').contains("Profile").click();
+        cy.get('#searchBar').type('{enter}');
+        cy.wait(10);
+        cy.get('.postTitle').should('contain', qTitles[0]);
+        cy.get('.question_author').first().click();
+        cy.get('#searchBar').type('{enter}');
+        cy.wait(10);
+        cy.get('.postTitle').should('contain', qTitles[0]);
+        cy.get('.postTitle').first().click()
+        cy.get('#searchBar').type('{enter}');
+        cy.wait(10);
+        cy.get('.postTitle').should('contain', qTitles[0]);
+        cy.get('.postTitle').first().click()
+        cy.get('.bluebtn').contains("Ask a Question").click();
+        cy.get('#searchBar').type('{enter}');
+        cy.wait(10);
+        cy.get('.postTitle').should('contain', qTitles[0]);
+        cy.get('.postTitle').first().click();
+        cy.get('.bluebtn').contains("Answer Question").click();
+        cy.get('#searchBar').type('{enter}');
+        cy.wait(10);
+        cy.get('.postTitle').should('contain', qTitles[0]);
+    })
+})

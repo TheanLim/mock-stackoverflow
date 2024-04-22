@@ -6,6 +6,7 @@ import "./index.css";
 import VotingButtons from "../../baseComponents/votingbuttons";
 import { FlaggingButtons } from "../../baseComponents/flaggingbuttons";
 import { SolutionButton } from "../../baseComponents/solutionbutton";
+import TagContainer from "../../baseComponents/tagcontainer";
 
 const voteTypeCnt = (votes, voteType) => {
     return (votes || []).filter(vote => vote.vote_type === voteType).length;
@@ -14,7 +15,7 @@ const voteTypeCnt = (votes, voteType) => {
 // Component for the Answer Page
 // A post could be a Question or an Answer Post
 const Post = ({ postType, pid, views, text, postBy, meta, comments,
-                  score, votes, status, user, isSolution, parentPostBy,
+                  score, votes, status, user, isSolution, parentPostBy, tags = [], clickTag,
                   handleVote, handleLogin, handleAddComment, handleMarkSolution, handleProfile }) => {
     const [isAuthorizedToFlag, setIsAuthorizedToFlag] = useState(false);
     const [isAuthorizedToCloseReopen, setIsAuthorizedToCloseReopen] = useState(false);
@@ -56,7 +57,7 @@ const Post = ({ postType, pid, views, text, postBy, meta, comments,
                 {views && <div className="bold_title post_view">{views} views</div>}
                 <div className="post">
                     <div id="postText" className="postText">
-                        {handleHyperlink(text)}
+                        {Post.handleHyperlink(text)}
                     </div>
                     <div className="postAuthor"
                          onClick={() => {
@@ -67,8 +68,14 @@ const Post = ({ postType, pid, views, text, postBy, meta, comments,
                         <div className="post_question_meta">{postType==="question"?'asked':''} {meta}</div>
                     </div>
                 </div>
+                {postType === "question" &&
+                  <TagContainer
+                      tags={tags}
+                      clickMethod={clickTag}
+                  />
+                }
                 <div className='flag_close_reopen_container'>
-                    <FlaggingButtons 
+                <FlaggingButtons
                         handleVote={handleVote} 
                         postType={postType} 
                         pid={pid} 
@@ -105,5 +112,6 @@ const Post = ({ postType, pid, views, text, postBy, meta, comments,
     );
 };
 
-Post.isAuthorizedToVote = isAuthorizedToVote
+Post.isAuthorizedToVote = isAuthorizedToVote;
+Post.handleHyperlink = handleHyperlink;
 export default Post;

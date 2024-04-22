@@ -101,3 +101,40 @@ describe('New Answer Page 6', () => {
         cy.contains('0 seconds ago');
     });
 });
+
+describe('New Answer Page 7', () => {
+    it('Answer Question creates a answer with proper hyperlink treatment', () => {
+        cy.visit("http://localhost:3000");
+        cy.contains('Sign In').click();
+        cy.get('#formEmailInput').type('test1@gmail.com');
+        cy.get('#formPasswordInput').type('test123');
+        cy.get('.form_postBtn').click();
+        cy.contains("Programmatically navigate using React router").click();
+        cy.contains("Answer Question").click();
+        cy.get("#answerTextInput").type(
+          "Here is a link: [Google](https://www.google.com)"
+        );
+        cy.contains("Post Answer").click();
+        cy.get(".postText").eq(3)
+          .find("a")
+          .should("have.attr", "href", "https://www.google.com");
+    });
+
+    it("Attempts to add an answer with an invalid hyperlink and verifies failure", () => {
+        cy.visit("http://localhost:3000");
+        cy.contains('Sign In').click();
+        cy.get('#formEmailInput').type('test1@gmail.com');
+        cy.get('#formPasswordInput').type('test123');
+        cy.get('.form_postBtn').click();
+        cy.contains("Programmatically navigate using React router").click();
+        cy.contains("Answer Question").click();
+        cy.get("#answerTextInput").type(
+          "Check this invalid link: [](https://wrong.url)"
+        );
+        cy.contains("Post Answer").click();
+        cy.contains("Invalid hyperlink format.");
+        cy.visit("http://localhost:3000");
+        cy.contains("Programmatically navigate using React router").click();
+        cy.get(".postText").should("not.contain", "https://wrong.url");
+    });
+});

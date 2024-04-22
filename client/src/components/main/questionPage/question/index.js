@@ -1,5 +1,6 @@
 import {getMetaData} from "../../../../tool";
 import "./index.css";
+import TagContainer from "../../baseComponents/tagcontainer";
 
 const Question = ({q, clickTag, handleAnswer, handleProfile}) => {
   return (
@@ -16,20 +17,10 @@ const Question = ({q, clickTag, handleAnswer, handleProfile}) => {
       >
         <div className="postTitle">{q.status === 'closed' ? `${q.title} [closed]` : q.title}</div>
         <div className="question_tags">
-          {q.tags.map((tag, idx) => {
-            return (
-              <button
-                key={idx}
-                className="question_tag_button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  clickTag(tag.name);
-                }}
-              >
-                {tag.name}
-              </button>
-            );
-          })}
+          <TagContainer
+            tags={q.tags}
+            clickMethod={clickTag}
+          />
         </div>
       </div>
       <div

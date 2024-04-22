@@ -93,9 +93,9 @@ it('shows error message when about section is too long', () => {
     profileUser={""}
     handleProfile={() => {}}
   />)
-  cy.get('#formAboutText').type('a'.repeat(231))
+  cy.get('#formAboutText').type('a'.repeat(501))
   cy.get('.form_postBtn').click()
-  cy.get('div .input_error').contains('Limit about section to 230 words or less.')
+  cy.get('div .input_error').contains('Limit about section to 500 characters or less.')
 })
 
 it('calls viewUserProfile when loading the profile and loads existing info', () => {
@@ -253,6 +253,117 @@ it('calls handleProfile after sending changes to the profile', () => {
   cy.get('@handleProfileSpy').should('have.been.calledWith', mockUser._id);
 });
 
+it('calls validateHyperlink after sending about section changes to the profile', () => {
+  const mockUser = {
+    _id: '0000ffff',
+    reputation: 1,
+    first_name: 'Test First Name',
+    last_name: 'Test Last Name',
+    email: "test@example.com",
+    about_summary: 'Test About',
+    display_name: 'test display name',
+    date_joined: (new Date('3/12/2024')).toISOString(),
+    time_last_seen: (new Date('3/12/2024')).toISOString(),
+  };
+  const mockQList = [
+    {
+      title: "Test Title",
+      asked_by: mockUser,
+      ask_date_time: (new Date('3/12/2024')).toISOString(),
+      answers: [
+        {ans_date_time: (new Date('3/12/2024')).toISOString()}
+      ]
+    }
+  ];
+
+  const mockResponse = {
+    profile: mockUser,
+    profileOwner: true,
+    questions: mockQList,
+    answers: mockQList
+  }
+
+  const mockChanges = {
+    email: "test@example.comm",
+    display_name: "test display nameNew",
+    about_summary: "Test AboutNew",
+    first_name: "Test First NameNew",
+    last_name: "Test Last NameNew"
+  }
+  cy.stub(EditProfile, 'validateHyperlink').as('validateHyperlinkStub').resolves(true);
+  cy.stub(EditProfile, 'viewUserProfile').as('viewUserProfileStub').resolves(mockResponse);
+  cy.stub(EditProfile, 'updateProfile').as('updateProfileStub').resolves({user: mockUser._id});
+  const handleProfileSpy = cy.spy().as('handleProfileSpy');
+
+  cy.mount(<EditProfile
+    profileUser={"0000ffff"}
+    handleProfile={handleProfileSpy}
+  />)
+
+  cy.get('#formAboutText').type("New");
+  cy.get('#formDisplayNameInput').type("New");
+  cy.get('#formFNameInput').type("New");
+  cy.get('#formLNameInput').type("New");
+  cy.get('#formEmailInput').type("m");
+  cy.get('@viewUserProfileStub').should('have.been.calledWith', mockUser._id);
+  cy.get('.form_postBtn').click();
+  cy.get('@validateHyperlinkStub').should('have.been.calledWith', "Test AboutNew");
+  cy.get('@updateProfileStub').should('have.been.calledWith', mockChanges);
+  cy.get('@handleProfileSpy').should('have.been.calledWith', mockUser._id);
+});
+
+it('shows an error if hyperlink validation fails', () => {
+  const mockUser = {
+    _id: '0000ffff',
+    reputation: 1,
+    first_name: 'Test First Name',
+    last_name: 'Test Last Name',
+    email: "test@example.com",
+    about_summary: 'Test About',
+    display_name: 'test display name',
+    date_joined: (new Date('3/12/2024')).toISOString(),
+    time_last_seen: (new Date('3/12/2024')).toISOString(),
+  };
+  const mockQList = [
+    {
+      title: "Test Title",
+      asked_by: mockUser,
+      ask_date_time: (new Date('3/12/2024')).toISOString(),
+      answers: [
+        {ans_date_time: (new Date('3/12/2024')).toISOString()}
+      ]
+    }
+  ];
+
+  const mockResponse = {
+    profile: mockUser,
+    profileOwner: true,
+    questions: mockQList,
+    answers: mockQList
+  }
+
+  cy.stub(EditProfile, 'validateHyperlink').as('validateHyperlinkStub').returns(false);
+  cy.stub(EditProfile, 'viewUserProfile').as('viewUserProfileStub').resolves(mockResponse);
+  cy.stub(EditProfile, 'updateProfile').as('updateProfileStub').resolves({user: mockUser._id});
+  const handleProfileSpy = cy.spy().as('handleProfileSpy');
+
+  cy.mount(<EditProfile
+    profileUser={"0000ffff"}
+    handleProfile={handleProfileSpy}
+  />)
+
+  cy.get('#formAboutText').type("New");
+  cy.get('#formDisplayNameInput').type("New");
+  cy.get('#formFNameInput').type("New");
+  cy.get('#formLNameInput').type("New");
+  cy.get('#formEmailInput').type("m");
+  cy.get('@viewUserProfileStub').should('have.been.calledWith', mockUser._id);
+  cy.get('.form_postBtn').click();
+  cy.get('@validateHyperlinkStub').should('have.been.calledWith', "Test AboutNew");
+  cy.get('div .input_error').contains('Invalid hyperlink format.');
+
+});
+
 it('shows an error if a new display name exists', () => {
   const mockUser = {
     _id: '0000ffff',
@@ -368,3 +479,4 @@ it('shows an error if a new display name exists', () => {
   cy.get('@updateProfileStub').should('have.been.calledWith', mockChanges);
   cy.get('div .input_error').contains('New email already exists');
 });
+

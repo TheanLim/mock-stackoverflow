@@ -51,7 +51,6 @@ const viewProfile = async (req, res) => {
 const editProfile = async (req, res) => {
   try {
     let userChanges = sanitizeAndEscapeInput(req.body);
-    //TODO: MOVE CHECK FOR EXISTING USERS TO UTILS
     let existing = await User.findOne({display_name: userChanges.display_name});
     if (existing && existing._id.toString() !== req.session.user) {
       return res.status(403).json({error: 'New Display Name already exists'});

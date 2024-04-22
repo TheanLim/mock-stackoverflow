@@ -128,3 +128,54 @@ it('handleQuestion is called when click Post Question', () => {
     cy.get('@addQuestionStub').should('have.been.calledWith', question);
     cy.get('@handleQuestionsSpy').should('have.been.calledOnce');
 })
+
+it('validateHyperlink is called when click Post Question', () => {
+    const handleQuestionsSpy = cy.spy().as('handleQuestionsSpy')
+
+    const question = {
+        title: 'title1',
+        text: 'question1',
+        tags: ['tag1', 'tag2'],
+        ask_date_time: new Date(),
+        status: 'open',
+        score: 0,
+    };
+
+    cy.stub(NewQuestion, 'validateHyperlink').as('validateHyperlinkStub').returns(true);
+    cy.stub(NewQuestion, 'addQuestion').as('addQuestionStub').resolves({_id:"0000ffff", ...question});
+
+    cy.mount(<NewQuestion handleQuestions={handleQuestionsSpy} />)
+
+    cy.get('#formTitleInput').type('title1')
+    cy.get('#formTextInput').type('question1')
+    cy.get('#formTagInput').type('tag1 tag2')
+    cy.get('.form_postBtn').click();
+    cy.get('@validateHyperlinkStub').should('have.been.calledWith', question.text)
+    cy.get('@addQuestionStub').should('have.been.calledWith', question);
+    cy.get('@handleQuestionsSpy').should('have.been.calledOnce');
+})
+
+it('validateHyperlink is called when click Post Question', () => {
+    const handleQuestionsSpy = cy.spy().as('handleQuestionsSpy')
+
+    const question = {
+        title: 'title1',
+        text: 'question1',
+        tags: ['tag1', 'tag2'],
+        ask_date_time: new Date(),
+        status: 'open',
+        score: 0,
+    };
+
+    cy.stub(NewQuestion, 'validateHyperlink').as('validateHyperlinkStub').returns(false);
+    cy.stub(NewQuestion, 'addQuestion').as('addQuestionStub').resolves({_id:"0000ffff", ...question});
+
+    cy.mount(<NewQuestion handleQuestions={handleQuestionsSpy} />)
+
+    cy.get('#formTitleInput').type('title1')
+    cy.get('#formTextInput').type('question1')
+    cy.get('#formTagInput').type('tag1 tag2')
+    cy.get('.form_postBtn').click();
+    cy.get('@validateHyperlinkStub').should('have.been.calledWith', question.text)
+    cy.get('div .input_error').contains('Invalid hyperlink format.');
+})

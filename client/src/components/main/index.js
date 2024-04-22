@@ -79,8 +79,8 @@ const Main = ({
   }
 
   const handleProfile = (uid) => {
-    setViewUser(uid);
     setPage("profile");
+    setViewUser(uid);
   }
 
   const handleEditProfile = () => {
@@ -112,7 +112,7 @@ const Main = ({
         break;
       }
       case "viewing_self_profile": {
-        if (page !== "profile") {
+        if (page !== "profile" || user !== viewUser) {
           handleProfile(user);
         }
         updateAppStatus("logged_in");
@@ -123,6 +123,13 @@ const Main = ({
           handleQuestions();
         }
         updateAppStatus("logged_out");
+        break;
+      }
+      case "searching": {
+        if (page !== "home") {
+          setPage("home");
+        }
+        updateAppStatus("search_idle");
         break;
       }
       default: {
@@ -156,6 +163,7 @@ const Main = ({
             handleNewQuestion={handleNewQuestion}
             handleNewAnswer={handleNewAnswer}
             user={user}
+            clickTag={clickTag}
             handleLogin={handleLogin}
             handleProfile={handleProfile}
           />

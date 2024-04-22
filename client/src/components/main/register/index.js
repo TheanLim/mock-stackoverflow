@@ -90,7 +90,7 @@ const Register = ({ handleRedirect, handleLogin, updateUser, csrfToken, setCsrfT
     } else if (res.error === 'Display Name already exists') {
       setUsernameError(res.error);
     }else {
-      updateUser(res)
+      updateUser(res.user)
       handleRedirect();
     }
   }
