@@ -8,7 +8,7 @@ const User = require("../../models/users");
 const Question = require("../../models/questions");
 const Answer = require("../../models/answers");
 const Comment = require("../../models/comments");
-const { votingActionInfo } =  require("../../utils/reputation");
+const { votingActionInfo, handleVoteReputation} =  require("../../utils/reputation");
 const { addComment } = require("../../utils/comment");
 
 let server;
@@ -193,4 +193,170 @@ describe("addComment Helper function", () =>{
     }
   });
   
-})
+});
+
+describe("Comment add endpoints hit addComment helper", () =>{
+  let req, res, user, postOwner, post;
+
+  beforeEach(() => {
+    server = require("../../server");
+    session = require('supertest-session');
+    timekeeper.freeze(new Date());
+  })
+
+  afterEach(async () => {
+    server.close();
+    await mongoose.disconnect()
+    timekeeper.reset();
+  });
+
+  const setupSession = async(userRep=1, errorFindById = null) => {
+    // Set up for login
+    const mockReqBody = {
+      email: 'test@example.com',
+      password: 'test password',
+    };
+
+    bcrypt.hash.mockResolvedValue("hashedPassword");
+    bcrypt.compare.mockResolvedValue(true);
+    const hashedPassword = await bcrypt.hash(mockReqBody.password, SALT_ROUNDS);
+    const mockUser = {
+      _id: '0000ffff',
+      reputation: userRep,
+      first_name: 'Test First Name',
+      last_name: 'Test Last Name',
+      email: mockReqBody.email,
+      password: hashedPassword,
+      display_name: 'test display name',
+      date_joined: new Date(),
+      time_last_seen: new Date(),
+    };
+
+    User.findOne.mockResolvedValueOnce(mockUser);
+
+    if (errorFindById) User.findById.mockRejectedValue(errorFindById);
+    else User.findById.mockResolvedValueOnce(mockUser);
+
+    // login to get an authorized session
+    let authSession = session(server)
+    await authSession.post('/user/login').send(mockReqBody)
+    return authSession;
+  }
+
+  test('addComment to Question hits endpoint and returns correct info', async () => {
+    const authSession = await setupSession(votingActionInfo['comment'].reputation);
+    bcrypt.hash.mockResolvedValue("hashedPassword");
+    bcrypt.compare.mockResolvedValue(true);
+    const hashedPassword = await bcrypt.hash("test password", SALT_ROUNDS);
+    const mockUser = {
+      _id: '0000ffff',
+      reputation: votingActionInfo['comment'].reputation,
+      first_name: 'Test First Name',
+      last_name: 'Test Last Name',
+      email: 'test@example.com',
+      password: hashedPassword,
+      display_name: 'test display name',
+      date_joined: new Date(),
+      time_last_seen: new Date(),
+      save: jest.fn()
+    };
+
+    postOwner = {
+      _id: new mongoose.Types.ObjectId(),
+      reputation: DEFAULT_REPS,
+      save: jest.fn(),
+    };
+    post = {
+      _id: new mongoose.Types.ObjectId(),
+      postOwner: postOwner,
+      comments: [],
+      save: jest.fn(),
+    };
+
+    User.findById = jest.fn().mockResolvedValue(mockUser);
+    Comment.create = jest.fn().mockResolvedValue({ _id: new mongoose.Types.ObjectId() });
+
+    Question.findById = jest.fn().mockImplementation(
+      () => ({
+        populate: jest.fn().mockImplementation(
+          () => ({ populate: jest.fn().mockResolvedValueOnce(post)})
+        )
+      })
+    );
+
+    const response = await authSession.post("/comment/addCommentToQuestion")
+      .send({ id: post._id, text: "Sample Text"});
+    expect(response.status).toBe(200);
+
+    expect(User.findById).toHaveBeenCalledWith('0000ffff');
+    expect(Question.findById).toHaveBeenCalledWith(post._id.toString());
+
+    expect(Comment.create).toHaveBeenCalledWith({
+      comment_by: mockUser,
+      text: "Sample Text",
+      comment_date_time: new Date(),
+    });
+    expect(post.comments).toHaveLength(1);
+    expect(post.save).toHaveBeenCalled();
+
+  })
+
+  test('addComment to Answer hits endpoint and returns correct info', async () => {
+    const authSession = await setupSession(votingActionInfo['comment'].reputation);
+    bcrypt.hash.mockResolvedValue("hashedPassword");
+    bcrypt.compare.mockResolvedValue(true);
+    const hashedPassword = await bcrypt.hash("test password", SALT_ROUNDS);
+    const mockUser = {
+      _id: '0000ffff',
+      reputation: votingActionInfo['comment'].reputation,
+      first_name: 'Test First Name',
+      last_name: 'Test Last Name',
+      email: 'test@example.com',
+      password: hashedPassword,
+      display_name: 'test display name',
+      date_joined: new Date(),
+      time_last_seen: new Date(),
+      save: jest.fn()
+    };
+
+    postOwner = {
+      _id: new mongoose.Types.ObjectId(),
+      reputation: DEFAULT_REPS,
+      save: jest.fn(),
+    };
+    post = {
+      _id: new mongoose.Types.ObjectId(),
+      postOwner: postOwner,
+      comments: [],
+      save: jest.fn(),
+    };
+
+    User.findById = jest.fn().mockResolvedValue(mockUser);
+    Comment.create = jest.fn().mockResolvedValue({ _id: new mongoose.Types.ObjectId() });
+
+    Answer.findById = jest.fn().mockImplementation(
+      () => ({
+        populate: jest.fn().mockImplementation(
+          () => ({ populate: jest.fn().mockResolvedValueOnce(post)})
+        )
+      })
+    );
+
+    const response = await authSession.post("/comment/addCommentToAnswer")
+      .send({ id: post._id, text: "Sample Text"});
+    expect(response.status).toBe(200);
+
+    expect(User.findById).toHaveBeenCalledWith('0000ffff');
+    expect(Answer.findById).toHaveBeenCalledWith(post._id.toString());
+
+    expect(Comment.create).toHaveBeenCalledWith({
+      comment_by: mockUser,
+      text: "Sample Text",
+      comment_date_time: new Date(),
+    });
+    expect(post.comments).toHaveLength(1);
+    expect(post.save).toHaveBeenCalled();
+
+  })
+
+});

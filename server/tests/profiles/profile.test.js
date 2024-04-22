@@ -62,12 +62,32 @@ describe("GET /view/:uid", () => {
         answers: [
           {ans_date_time: new Date()}
         ]
+      },
+      {
+        title: "Test Title2",
+        asked_by: mockUser,
+        ask_date_time: new Date(),
+        answers: [
+          {ans_date_time: new Date()}
+        ]
       }
     ];
 
     const mockListRes = [
       {
         title: "Test Title",
+        asked_by: {
+          ...mockUser,
+          date_joined: (new Date()).toISOString(),
+          time_last_seen: (new Date()).toISOString()
+        },
+        ask_date_time: (new Date()).toISOString(),
+        answers: [
+          {ans_date_time: (new Date()).toISOString()}
+        ]
+      },
+      {
+        title: "Test Title2",
         asked_by: {
           ...mockUser,
           date_joined: (new Date()).toISOString(),

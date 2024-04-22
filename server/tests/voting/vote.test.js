@@ -9,7 +9,7 @@ const User = require("../../models/users");
 const Question = require("../../models/questions");
 const Answer = require("../../models/answers");
 const Comment = require("../../models/comments");
-const { votingActionInfo } =  require("../../utils/reputation");
+const { votingActionInfo, handleVoteReputation} =  require("../../utils/reputation");
 const { addVote, MAX_FLAGS, MAX_CLOSE_REOPEN} = require("../../utils/vote");
 
 let server;
@@ -472,4 +472,350 @@ describe("GET /isAuthorizedToVote/:voteType", () => {
       expect(response.status).toBe(500);
       expect(response.body).toEqual({error: "Database error"});
     });
+});
+
+describe("POST /addVoteToQuestion", () => {
+  let postOwner, post;
+
+  beforeEach(() => {
+    server = require("../../server");
+    session = require('supertest-session');
+    timekeeper.freeze(new Date());
+  })
+
+  afterEach(async () => {
+    server.close();
+    await mongoose.disconnect()
+    timekeeper.reset();
+  });
+
+  test("should hit addVoteToQuestion endpoint", async () => {
+    const mockReqBody = {
+      email: 'test@example.com',
+      password: 'test password',
+    };
+    bcrypt.hash.mockResolvedValue("hashedPassword");
+    bcrypt.compare.mockResolvedValue(true);
+    const hashedPassword = await bcrypt.hash("test password", SALT_ROUNDS);
+    const mockUser = {
+      _id: '0000ffff',
+      reputation: 200,
+      first_name: 'Test First Name',
+      last_name: 'Test Last Name',
+      email: 'test@example.com',
+      password: hashedPassword,
+      display_name: 'test display name',
+      date_joined: new Date(),
+      time_last_seen: new Date(),
+      save: jest.fn()
+    };
+
+    User.findOne.mockResolvedValueOnce(mockUser);
+    User.findById.mockResolvedValueOnce(mockUser);
+    // login to get an authorized session
+    let authSession = session(server)
+    let loginRes = await authSession.post('/user/login').send(mockReqBody);
+    expect(loginRes.status).toBe(200);
+
+    postOwner = {
+      _id: new mongoose.Types.ObjectId(),
+      reputation: DEFAULT_REPS,
+      save: jest.fn(),
+    };
+    post = {
+      _id: new mongoose.Types.ObjectId(),
+      postOwner: postOwner,
+      votes: [],
+      save: jest.fn(),
+    };
+
+    User.findById = jest.fn().mockResolvedValue(mockUser);
+    Vote.create = jest.fn().mockResolvedValue({ _id: new mongoose.Types.ObjectId() });
+    Vote.deleteOne = jest.fn().mockResolvedValue();
+
+    Question.findById = jest.fn().mockImplementation(
+      () => ({
+        populate: jest.fn().mockImplementation(
+          () => ({ populate: jest.fn().mockResolvedValueOnce(post)})
+        )
+      })
+    );
+
+    const response = await authSession.post('/vote/addVoteToQuestion')
+      .send({ id: post._id, vote_type: "upvote"});
+    expect(response.status).toBe(200);
+  });
+});
+
+describe("POST /addVoteToAnswer", () => {
+  let postOwner, post;
+
+  beforeEach(() => {
+    server = require("../../server");
+    session = require('supertest-session');
+    timekeeper.freeze(new Date());
+  })
+
+  afterEach(async () => {
+    server.close();
+    await mongoose.disconnect()
+    timekeeper.reset();
+  });
+
+  test("should hit addVoteToQuestion endpoint", async () => {
+    const mockReqBody = {
+      email: 'test@example.com',
+      password: 'test password',
+    };
+    bcrypt.hash.mockResolvedValue("hashedPassword");
+    bcrypt.compare.mockResolvedValue(true);
+    const hashedPassword = await bcrypt.hash("test password", SALT_ROUNDS);
+    const mockUser = {
+      _id: '0000ffff',
+      reputation: 200,
+      first_name: 'Test First Name',
+      last_name: 'Test Last Name',
+      email: 'test@example.com',
+      password: hashedPassword,
+      display_name: 'test display name',
+      date_joined: new Date(),
+      time_last_seen: new Date(),
+      save: jest.fn()
+    };
+
+    User.findOne.mockResolvedValueOnce(mockUser);
+    User.findById.mockResolvedValueOnce(mockUser);
+    // login to get an authorized session
+    let authSession = session(server)
+    let loginRes = await authSession.post('/user/login').send(mockReqBody);
+    expect(loginRes.status).toBe(200);
+
+    postOwner = {
+      _id: new mongoose.Types.ObjectId(),
+      reputation: DEFAULT_REPS,
+      save: jest.fn(),
+    };
+    post = {
+      _id: new mongoose.Types.ObjectId(),
+      postOwner: postOwner,
+      votes: [],
+      save: jest.fn(),
+    };
+
+    User.findById = jest.fn().mockResolvedValue(mockUser);
+    Vote.create = jest.fn().mockResolvedValue({ _id: new mongoose.Types.ObjectId() });
+    Vote.deleteOne = jest.fn().mockResolvedValue();
+
+    Answer.findById = jest.fn().mockImplementation(
+      () => ({
+        populate: jest.fn().mockImplementation(
+          () => ({ populate: jest.fn().mockResolvedValueOnce(post)})
+        )
+      })
+    );
+
+    const response = await authSession.post('/vote/addVoteToAnswer')
+      .send({ id: post._id, vote_type: "upvote"});
+    expect(response.status).toBe(200);
+  });
+});
+
+describe("POST /addVoteToComment", () => {
+  let postOwner, post;
+
+  beforeEach(() => {
+    server = require("../../server");
+    session = require('supertest-session');
+    timekeeper.freeze(new Date());
+  })
+
+  afterEach(async () => {
+    server.close();
+    await mongoose.disconnect()
+    timekeeper.reset();
+  });
+
+  test("should hit addVoteToQuestion endpoint", async () => {
+    const mockReqBody = {
+      email: 'test@example.com',
+      password: 'test password',
+    };
+    bcrypt.hash.mockResolvedValue("hashedPassword");
+    bcrypt.compare.mockResolvedValue(true);
+    const hashedPassword = await bcrypt.hash("test password", SALT_ROUNDS);
+    const mockUser = {
+      _id: '0000ffff',
+      reputation: 200,
+      first_name: 'Test First Name',
+      last_name: 'Test Last Name',
+      email: 'test@example.com',
+      password: hashedPassword,
+      display_name: 'test display name',
+      date_joined: new Date(),
+      time_last_seen: new Date(),
+      save: jest.fn()
+    };
+
+    User.findOne.mockResolvedValueOnce(mockUser);
+    User.findById.mockResolvedValueOnce(mockUser);
+    // login to get an authorized session
+    let authSession = session(server)
+    let loginRes = await authSession.post('/user/login').send(mockReqBody);
+    expect(loginRes.status).toBe(200);
+
+    postOwner = {
+      _id: new mongoose.Types.ObjectId(),
+      reputation: DEFAULT_REPS,
+      save: jest.fn(),
+    };
+    post = {
+      _id: new mongoose.Types.ObjectId(),
+      postOwner: postOwner,
+      votes: [],
+      save: jest.fn(),
+    };
+
+    User.findById = jest.fn().mockResolvedValue(mockUser);
+    Vote.create = jest.fn().mockResolvedValue({ _id: new mongoose.Types.ObjectId() });
+    Vote.deleteOne = jest.fn().mockResolvedValue();
+
+    Comment.findById = jest.fn().mockImplementation(
+      () => ({
+        populate: jest.fn().mockImplementation(
+          () => ({ populate: jest.fn().mockResolvedValueOnce(post)})
+        )
+      })
+    );
+
+    const response = await authSession.post('/vote/addVoteToComment')
+      .send({ id: post._id, vote_type: "upvote", vote_reason: "Test"});
+    expect(response.status).toBe(200);
+  });
+});
+
+describe("Handle Reputation Error", () => {
+  let postOwner, post;
+
+  beforeEach(() => {
+    server = require("../../server");
+    session = require('supertest-session');
+    timekeeper.freeze(new Date());
+  })
+
+  afterEach(async () => {
+    server.close();
+    await mongoose.disconnect()
+    timekeeper.reset();
+  });
+
+  test("if invalid action given, throws corresponding error", async () => {
+    bcrypt.hash.mockResolvedValue("hashedPassword");
+    bcrypt.compare.mockResolvedValue(true);
+    const hashedPassword = await bcrypt.hash("test password", SALT_ROUNDS);
+    const mockUser = {
+      _id: '0000ffff',
+      reputation: 200,
+      first_name: 'Test First Name',
+      last_name: 'Test Last Name',
+      email: 'test@example.com',
+      password: hashedPassword,
+      display_name: 'test display name',
+      date_joined: new Date(),
+      time_last_seen: new Date(),
+      save: jest.fn()
+    };
+
+    postOwner = {
+      _id: new mongoose.Types.ObjectId(),
+      reputation: DEFAULT_REPS,
+      save: jest.fn(),
+    };
+
+    const errRes = handleVoteReputation(mockUser, postOwner, 'upvote', "FAIL");
+    expect(errRes).rejects.toThrow("Invalid action type: FAIL. Valid action types are: apply, revert");
+  });
+
+  test("if invalid vote type given, throws corresponding error", async () => {
+
+    bcrypt.hash.mockResolvedValue("hashedPassword");
+    bcrypt.compare.mockResolvedValue(true);
+    const hashedPassword = await bcrypt.hash("test password", SALT_ROUNDS);
+    const mockUser = {
+      _id: '0000ffff',
+      reputation: 200,
+      first_name: 'Test First Name',
+      last_name: 'Test Last Name',
+      email: 'test@example.com',
+      password: hashedPassword,
+      display_name: 'test display name',
+      date_joined: new Date(),
+      time_last_seen: new Date(),
+      save: jest.fn()
+    };
+
+    postOwner = {
+      _id: new mongoose.Types.ObjectId(),
+      reputation: DEFAULT_REPS,
+      save: jest.fn(),
+    };
+
+    const errRes = handleVoteReputation(mockUser, postOwner, 'FAIL', "apply");
+    expect(errRes).rejects.toThrow("Invalid vote type");
+  });
+
+  test("if not enough reputation to apply vote, throws corresponding error", async () => {
+
+    bcrypt.hash.mockResolvedValue("hashedPassword");
+    bcrypt.compare.mockResolvedValue(true);
+    const hashedPassword = await bcrypt.hash("test password", SALT_ROUNDS);
+    const mockUser = {
+      _id: '0000ffff',
+      reputation: 1,
+      first_name: 'Test First Name',
+      last_name: 'Test Last Name',
+      email: 'test@example.com',
+      password: hashedPassword,
+      display_name: 'test display name',
+      date_joined: new Date(),
+      time_last_seen: new Date(),
+      save: jest.fn()
+    };
+
+    postOwner = {
+      _id: new mongoose.Types.ObjectId(),
+      reputation: DEFAULT_REPS,
+      save: jest.fn(),
+    };
+
+    const errRes = handleVoteReputation(mockUser, postOwner, 'upvote', "apply");
+    expect(errRes).rejects.toThrow("Needs at least 15 reputation to upvote");
+  });
+
+  test("if save fails, throws corresponding error", async () => {
+
+    bcrypt.hash.mockResolvedValue("hashedPassword");
+    bcrypt.compare.mockResolvedValue(true);
+    const hashedPassword = await bcrypt.hash("test password", SALT_ROUNDS);
+    const mockUser = {
+      _id: '0000ffff',
+      reputation: 200,
+      first_name: 'Test First Name',
+      last_name: 'Test Last Name',
+      email: 'test@example.com',
+      password: hashedPassword,
+      display_name: 'test display name',
+      date_joined: new Date(),
+      time_last_seen: new Date(),
+      save: jest.fn().mockRejectedValue(new Error("FAIL"))
+    };
+
+    postOwner = {
+      _id: new mongoose.Types.ObjectId(),
+      reputation: DEFAULT_REPS,
+      save: jest.fn(),
+    };
+
+    const errRes = handleVoteReputation(mockUser, postOwner, 'upvote', "apply");
+    expect(errRes).rejects.toThrow("Error when handling vote reputation: FAIL");
+  });
 });

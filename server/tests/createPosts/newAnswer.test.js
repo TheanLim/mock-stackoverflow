@@ -74,4 +74,45 @@ describe("POST /addAnswer", () => {
       { new: true }
     );
   });
+
+  it("should throw an error if answer cant be created", async () => {
+    // Mocking the request body
+    const mockReqBody = {
+      qid: "dummyQuestionId",
+      ans: {
+        text: "This is a test answer"
+      }
+    };
+
+    const mockUser = {
+      _id: '65e9b58910afe6e94dsfjkhc',
+      display_name: 'marko'
+    }
+
+    const mockAnswer = {
+      _id: "dummyAnswerId",
+      text: "This is a test answer",
+      ans_by: mockUser
+    }
+
+    // Mock the create method of the Answer model
+    User.findById = jest.fn().mockReturnValue(mockUser);
+    Answer.create.mockRejectedValue(new Error("Test Error"));
+
+    // Mocking the Question.findOneAndUpdate method
+    Question.findOneAndUpdate = jest.fn().mockResolvedValueOnce({
+      _id: "dummyQuestionId",
+      answers: ["dummyAnswerId"]
+    });
+
+    // Making the request
+    const response = await supertest(server)
+      .post("/answer/addAnswer")
+      .send(mockReqBody);
+
+    // Asserting the response
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({error: "Test Error"});
+
+  });
 });

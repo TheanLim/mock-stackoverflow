@@ -70,4 +70,12 @@ describe('Question Utils', () => {
     const result = await addTag('javascript', 1500);
     expect(result.toString()).toEqual(tag2._id);
   });
+
+  test('addTag return null if new tag to be created without enough rep', async () => {
+    mockingoose(Tag).toReturn(null, 'findOne');
+    mockingoose(Tag).toReturn(tag2, 'save');
+
+    const result = await addTag('javascript', 1400);
+    expect(result).toEqual(null);
+  });
 })

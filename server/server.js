@@ -42,7 +42,7 @@ app.use(
 app.use(express.json());
 
 app.get("/", (_, res) => {
-    res.send("Fake SO Server Dummy Endpoint");
+    res.json({message: "Fake SO Server Dummy Endpoint"});
     res.end();
 });
 

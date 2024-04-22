@@ -27,12 +27,8 @@ const logout = async (req, res) => {
       time_last_seen: Date.now()
     })
   }
-  req.session.destroy(function(err) {
-    if(err) {
-      res.status(500).json({error: err});
-    } else {
-      res.json({message: 'Session deleted successfully'});
-    }
+  req.session.destroy(function() {
+    res.json({message: 'Session deleted successfully'});
   });
 }
 
@@ -57,7 +53,7 @@ const login = async (req, res) => {
     req.session.user = user._id;
     res.json({user: user._id});
   } catch (err) {
-    res.status(500).json({});
+    res.status(500).json({error: "Failed to login."});
   }
 };
 

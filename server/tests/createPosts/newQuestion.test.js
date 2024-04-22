@@ -196,6 +196,49 @@ describe('GET /getQuestionById/:qid', () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockPopulatedQuestion);
   });
+
+  it('should return a question by id and not increment views if specified', async () => {
+
+    // Mock request parameters
+    const mockReqParams = {
+      qid: '65e9b5a995b6c7045a30d823',
+    };
+
+    const mockPopulatedQuestion = {
+      answers: [mockQuestions.filter(q => q._id == mockReqParams.qid)[0]['answers']], // Mock answers
+      asked_by: mockQuestions.filter(q => q._id == mockReqParams.qid)[0]['asked_by'],
+      views: mockQuestions[1].views,
+      votes: [mockQuestions.filter(q => q._id == mockReqParams.qid)[0]['votes']],
+      comments: [mockQuestions.filter(q => q._id == mockReqParams.qid)[0]['comments']],
+      solution: mockQuestions.filter(q => q._id == mockReqParams.qid)[0]['solution'],
+    };
+
+    const question = {};
+    question.toJSON  = jest.fn().mockReturnValue(mockPopulatedQuestion);
+
+    // Provide mock question data
+    Question.findOneAndUpdate = jest.fn().mockReturnValue({
+      populate: jest.fn().mockReturnValueOnce({
+        populate: jest.fn().mockReturnValueOnce({
+          populate: jest.fn().mockReturnValueOnce({
+            populate: jest.fn().mockReturnValueOnce({
+              populate: jest.fn().mockReturnValueOnce({
+                populate: jest.fn().mockResolvedValueOnce(question)
+              })
+            })
+          })
+        })
+      })
+    });
+
+    // Making the request
+    const response = await supertest(server)
+      .get(`/question/getQuestionById/${mockReqParams.qid}?incrementView=false`);
+
+    // Asserting the response
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(mockPopulatedQuestion);
+  });
 });
 
 describe('POST /addQuestion', () => {
@@ -261,6 +304,34 @@ describe('POST /addQuestion', () => {
     // Asserting the response
     expect(response.status).toBe(403);
     expect(response.body).toEqual({error: "Not enough reputation to create new tags."});
+
+  });
+
+  it('should throw an error if error occurs adding question', async () => {
+    // Mock request body
+
+    const mockTags = tag1;
+
+    const mockQuestion = {
+      _id: '65e9b58910afe6e94fc6e6fe',
+      title: 'Question 3 Title',
+      text: 'Question 3 Text',
+      tags: [tag1],
+      answers: [ans1],
+    }
+
+    User.findOne = jest.fn().mockImplementation(() => jest.fn().mockResolvedValueOnce(user2));
+    addTag.mockResolvedValue(mockTags);
+    Question.create.mockRejectedValue(new Error("Fail"));
+
+    // Making the request
+    const response = await supertest(server)
+      .post('/question/addQuestion')
+      .send(mockQuestion);
+
+    // Asserting the response
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({error: "Failed to create question."});
 
   });
 });

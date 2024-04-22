@@ -22,9 +22,6 @@ commentSchema.virtual('postOwner', {
 });
 
 commentSchema.virtual('score').get(function(){
-  if (this.votes.length === 0) {
-    return 0;
-  }
   let upvotes = this.votes.filter(vote => vote.vote_type === 'upvote').length;
   let downvotes = this.votes.filter(vote => vote.vote_type === 'downvote').length;
   return upvotes - downvotes;

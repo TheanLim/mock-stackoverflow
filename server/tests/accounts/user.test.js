@@ -4,6 +4,7 @@ const User = require('../../models/users');
 const {default: mongoose} = require("mongoose");
 const timekeeper = require('timekeeper');
 const bcrypt = require("bcrypt");
+const {auth} = require("mysql/lib/protocol/Auth");
 
 // Mock the Answer model
 jest.mock("../../models/users");
@@ -114,6 +115,23 @@ describe("POST /login", () => {
     expect(response.status).toBe(401);
 
   })
+
+  it('should send a 500 server response when error occurs', async () => {
+    const mockReqBody = {
+      email: 'test@example.com',
+      password: 'test password',
+    };
+
+    User.findOne.mockRejectedValueOnce(new Error("Fail"));
+    bcrypt.compare.mockResolvedValue(false);
+    // Making the request
+    const response = await supertest(server)
+      .post("/user/login")
+      .send(mockReqBody)
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({error: "Failed to login."})
+  })
 });
 
 describe("POST /signUp", () => {
@@ -172,6 +190,26 @@ describe("POST /signUp", () => {
       .send(mockReqBody)
 
     expect(response.status).toBe(403);
+    expect(response.body).toEqual({error: 'Email already exists'});
+  });
+
+  it('should send a 403 response when display name (unique) already exists', async () => {
+    User.findOne.mockResolvedValueOnce(null);
+    User.findOne.mockResolvedValueOnce({
+      _id: '0000ffff',
+      reputation: 1,
+      ...mockReqBody,
+      date_joined: new Date(),
+      time_last_seen: new Date(),
+    });
+
+    // Making the request
+    const response = await supertest(server)
+      .post("/user/signUp")
+      .send(mockReqBody)
+
+    expect(response.status).toBe(403);
+    expect(response.body).toEqual({error: 'Display Name already exists'});
   });
 
   it('should send a 500 response when unable User database write fails', async () => {
@@ -193,6 +231,9 @@ describe("POST /logout", () => {
     const mockReqBody = {
       email: 'test@example.com',
       password: 'test password',
+      session: {
+        user: '0000ffff'
+      }
     };
 
     bcrypt.hash.mockResolvedValue("hashedPassword");
@@ -213,15 +254,22 @@ describe("POST /logout", () => {
     User.findOne.mockResolvedValueOnce(mockUser);
 
     // Making the request
-    const logInResponse = await supertest(server)
-      .post("/user/login")
-      .send(mockReqBody)
+    let authSession = session(server);
+    const logInResponse = await authSession.post('/user/login').send(mockReqBody)
     expect(logInResponse.status).toBe(200);
     expect(User.findOne).toHaveBeenCalledWith({email: mockReqBody.email});
     expect(bcrypt.compare).toHaveBeenCalledWith(mockReqBody.password, hashedPassword);
     expect(logInResponse.body).toEqual({user: "0000ffff"});
 
-    const response = await supertest(server).get("/user/logout");
+    const response = await authSession.get("/user/logout");
+    expect(response.status).toBe(200);
+  })
+
+  it('execute logout when no session exists', async () => {
+
+    let authSession = session(server);
+
+    const response = await authSession.get("/user/logout");
     expect(response.status).toBe(200);
   })
 });
@@ -266,5 +314,41 @@ describe("GET /validateAuth", () => {
     const response = await authSession.get('/user/validateAuth');
     expect(response.status).toBe(200);
     expect(response.body).toEqual({user: userId});
+  })
+})
+
+describe("GET /csrf-token", () => {
+  it('should return user if logged in previously (request session is set)', async () => {
+    // Set up for login
+    const mockReqBody = {
+      email: 'test@example.com',
+      password: 'test password',
+    };
+
+    const userId = '0000ffff';
+    bcrypt.hash.mockResolvedValue("hashedPassword");
+    bcrypt.compare.mockResolvedValue(true);
+    const hashedPassword = await bcrypt.hash(mockReqBody.password, SALT_ROUNDS);
+    const mockUser = {
+      _id: '0000ffff',
+      reputation: 1,
+      first_name: 'Test First Name',
+      last_name: 'Test Last Name',
+      email: mockReqBody.email,
+      password: hashedPassword,
+      display_name: 'test display name',
+      date_joined: new Date(),
+      time_last_seen: new Date(),
+    };
+
+    User.findOne.mockResolvedValueOnce(mockUser);
+    // login to get an authorized session
+    let authSession = session(server)
+    await authSession.post('/user/login').send(mockReqBody)
+
+    // Validate session
+    const response = await authSession.get('/user/csrf-token');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({csrfToken: 'mockCSRFToken123'});
   })
 })
