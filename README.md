@@ -1,11 +1,21 @@
-[![Continuous Integration](https://github.com/CSE-316-Software-Development/final-project-marko-thean/actions/workflows/ci.yml/badge.svg)](https://github.com/CSE-316-Software-Development/final-project-marko-thean/actions/workflows/ci.yml)
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/37vDen4S)
-# Final Team Project for CS5500
-
-Login with your Northeastern credentials and read the project description [here](https://northeastern-my.sharepoint.com/:w:/g/personal/j_mitra_northeastern_edu/ETUqq9jqZolOr0U4v-gexHkBbCTAoYgTx7cUc34ds2wrTA?e=URQpeI).
 
 ## List of Requirements
-[View List of Required Features](https://docs.google.com/document/d/1GK8ENPpDvcV6Z5iWohmAPjmR76EHyWVnKtPXWwGFc5w/edit?usp=sharing)
+[View List of Required Features](Mock StackOverflow Requirements.pdf)
+
+## Repository Structure 
+The repository is structured as follows:
+* The `client/` directory. This contains all the logic for the user interface. Components are in the `src/components/` directory. The `package.json` file contains all dependencies for the `client/`. The `cypress/` directory contains all e2e tests and the component tests. 
+* The `server/` directory contains all logic for the application’s server. The starting point is `server.js`. The file `config.js` contains server configuration settings. Currently, it has the URLs for the local instances of the node server and MongoDB service. The init.js file has some starter code to connect to a MongoDB database instance running locally. The `destroy.js` file is used to delete the entire database and start afresh whenever necessary. The `tests/` directory contains all unit testing files. The `package.json` file contains all dependencies for the `server/`. 
+
+## Deployment
+The `client/` and the `server/` directory have a file named `Dockerfile`. These files contain commands to install a client and server application on a docker container and run them in the container. The project root has a file `docker-compose.yml` file. This file has commands to build the project. Building the project includes creating an image of MongoDB in a docker container, transferring all client and server files to the same container, and executing the server followed by the client on the container. 
+Steps to run docker:
+1.	Install docker by referring - https://docs.docker.com/engine/install/ 
+2.	Ensure you have docker set-up on your host machines and the docker daemon is up and running.
+3.	Update the Mongodb url as per the docker-compose.yml, i.e. update mongodb://localhost:27017/fake_so to mongodb://mongodb:27017/fake_so
+4.	From the main project directory, run the command to generate the images and start the containers
+5.	Run the command docker-compose up from the project root.
+This should result in the container being up and running. Start the application from your browser.
 
 ## Regarding Testing:
 We used a SnackBar to display error messages when users attempt to do certain actions.
@@ -14,8 +24,6 @@ When running the tests, if the test mentions a SnackBar, it does regularly pass,
 
 
 ## List of features
-
-All the features you have implemented. 
 
 
 | Feature                                   | Description                                                                                | E2E Tests                        | Component Tests                                                                              | Jest Tests  ('<Endpoint>': <path/to/endpoint)                                                      |
@@ -59,11 +67,3 @@ Generate the coverage report by running the following instructions:
 cd server
 npx jest --runInBand --coverage
 ```
-Alternatively, you can view the coverage report in the CI setup under Actions by checking either the artifacts or the
-output of the server-side tests.
-
-## Extra Credit Section (if applicable)
-Developed Extra Requirements:
-- Editing User Profiles
-- Account Creation and Sign In
-- Marking Posts as Solutions
