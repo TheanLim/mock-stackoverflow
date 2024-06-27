@@ -1,6 +1,6 @@
 
 ## List of Requirements
-[View List of Required Features](Mock StackOverflow Requirements.pdf)
+[View List of Required Features](Mock_StackOverflow_Requirements.pdf)
 
 ## Repository Structure 
 The repository is structured as follows:
